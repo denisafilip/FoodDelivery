@@ -1,6 +1,8 @@
 package com.example.secondassignment.controller;
 
+import com.example.secondassignment.DTO.AccountDTO;
 import com.example.secondassignment.DTO.LoginDTO;
+import com.example.secondassignment.mappers.AccountMapper;
 import com.example.secondassignment.service.account.AccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -17,7 +19,7 @@ public class AccountController {
     @Autowired
     private AccountServiceImpl accountService;
 
-    @GetMapping
+    /*@GetMapping
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<Map<String, Object>> login(@Param("credentials") LoginDTO loginDTO) {
         try {
@@ -25,23 +27,25 @@ public class AccountController {
         } catch (Exception exception) {
             return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
         }
-    }
+    }*/
 
-    /*@PostMapping()
-    public ResponseEntity<AdministratorDTO> save(@Validated @RequestBody LoginDTO loginDTO) {
+    @PostMapping("")
+    public ResponseEntity<AccountDTO> login(@RequestBody(required = false) LoginDTO loginDTO) {
         try {
+            System.out.println(loginDTO);
             AccountDTO accountDTO = accountService.logIn(loginDTO);
-            Administrator administrator1 = administratorService.save(Administrator.AdminBuilder()
+            System.out.println(accountDTO);
+            /*Administrator administrator1 = administratorService.save(Administrator.AdminBuilder()
                     .firstName(administrator.getFirstName())
                     .lastName(administrator.getLastName())
                     .email(administrator.getEmail())
                     .password(administrator.getPassword())
-                    .build());
-            return new ResponseEntity<>(AdministratorMapper.getInstance().convertToDTO(administrator1), HttpStatus.CREATED);
+                    .build());*/
+            return new ResponseEntity<>(accountDTO, HttpStatus.CREATED);
         } catch (Exception exception) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-    }*/
+    }
 
 
 }

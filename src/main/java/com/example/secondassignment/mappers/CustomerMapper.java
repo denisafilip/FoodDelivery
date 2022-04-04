@@ -2,6 +2,7 @@ package com.example.secondassignment.mappers;
 
 import com.example.secondassignment.DTO.CustomerDTO;
 import com.example.secondassignment.model.Customer;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 public class CustomerMapper implements Mapper<Customer, CustomerDTO> {
 
@@ -20,7 +21,13 @@ public class CustomerMapper implements Mapper<Customer, CustomerDTO> {
 
     @Override
     public Customer convertFromDTO(CustomerDTO customerDTO) {
-        return null;
+        return Customer.CustomerBuilder()
+                .address(customerDTO.getAddress())
+                .email(customerDTO.getEmail())
+                .firstName(customerDTO.getFirstName())
+                .lastName(customerDTO.getLastName())
+                .password(BCrypt.hashpw(customerDTO.getPassword(), BCrypt.gensalt(12)))
+                .build();
     }
 
     @Override

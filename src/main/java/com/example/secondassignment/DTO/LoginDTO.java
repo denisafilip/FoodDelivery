@@ -10,6 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class LoginDTO {
 
     @NotNull(message = "Email is required.")

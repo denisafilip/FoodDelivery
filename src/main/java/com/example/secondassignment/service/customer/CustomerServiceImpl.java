@@ -12,6 +12,7 @@ import com.example.secondassignment.model.Customer;
 import com.example.secondassignment.repository.CustomerRepository;
 import com.example.secondassignment.service.address.AddressService;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
+import com.example.secondassignment.service.validators.AddressValidator;
 import com.example.secondassignment.service.validators.NameValidator;
 import com.example.secondassignment.service.validators.UserEmailValidator;
 import com.example.secondassignment.service.validators.UserPasswordValidator;
@@ -70,27 +71,27 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public CustomerDTO register(CustomerDTO customerDTO) throws DuplicateName, InvalidDataException {
-        Optional<Customer> _customer = customerRepository.findByEmail(customerDTO.getEmail());
-        Address address = addressService.save(customerDTO.getAddress());
-
-        if (_customer.isPresent()) {
-            throw new DuplicateName("A customer with that email already exists!");
-        }
-
         String validationMsg = validateCustomer(customerDTO.getFirstName(), customerDTO.getLastName(),
                 customerDTO.getEmail(), customerDTO.getPassword());
         if (validationMsg != null) {
             throw new InvalidDataException("The details of the customer are incorrect!");
         }
+        Address address = addressService.save(customerDTO.getAddress());
 
-        Customer c = Customer.CustomerBuilder()
+        Optional<Customer> _customer = customerRepository.findByEmail(customerDTO.getEmail());
+        if (_customer.isPresent()) {
+            throw new DuplicateName("A customer with that email already exists!");
+        }
+
+        customerDTO.setAddress(address);
+        /*Customer c = Customer.CustomerBuilder()
                 .address(address)
                 .email(customerDTO.getEmail())
                 .firstName(customerDTO.getFirstName())
                 .lastName(customerDTO.getLastName())
                 .password(BCrypt.hashpw(customerDTO.getPassword(), BCrypt.gensalt(12)))
-                .build();
-
+                .build();*/
+        Customer c = CustomerMapper.getInstance().convertFromDTO(customerDTO);
         customerRepository.save(c);
         return CustomerMapper.getInstance().convertToDTO(c);
     }

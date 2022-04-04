@@ -54,8 +54,8 @@ public class AccountServiceImpl implements AccountService {
         throw new NoSuchElementException("No account with this email and password was found.");
     }
 
-    public Map<String, Object> logIn(LoginDTO loginDTO) {
-        AccountDTO accountDTO = this.getAccountDTO(loginDTO);
+    public AccountDTO logIn(LoginDTO loginDTO) {
+        /*AccountDTO accountDTO = this.getAccountDTO(loginDTO);
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("account", accountDTO);
         boolean gotAdmin = false;
@@ -63,7 +63,8 @@ public class AccountServiceImpl implements AccountService {
             gotAdmin = true;
         }
         responseMap.put("admin", gotAdmin);
-        return responseMap;
+        return responseMap;*/
+        return this.getAccountDTO(loginDTO);
     }
 
 }

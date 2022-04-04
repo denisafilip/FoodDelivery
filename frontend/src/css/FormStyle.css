@@ -1,4 +1,4 @@
-.Register {
+.FormStyle {
     margin: auto;
     padding: 10px;
     border: 1px solid #c9c9c9;
@@ -8,7 +8,18 @@
     display: block;
 }
 
-.Register button {
+.FormStyle select {
+    margin: auto;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #c9c9c9;
+    border-radius: 5px;
+    background: #f5f5f5;
+    width: 325px;
+    display: block;
+}
+
+.FormStyle button {
     margin: 10px 0 0 0;
     padding: 7px 10px;
     border: 1px solid #efffff;
@@ -19,3 +30,4 @@
     color: white;
     display: block;
 }
+

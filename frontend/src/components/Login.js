@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {Form, Button} from "react-bootstrap";
-import { ThemeConsumer } from "react-bootstrap/esm/ThemeProvider";
 import { useNavigate } from "react-router-dom";
 import "../css/Login.css";
 import axios from "axios";
@@ -19,18 +18,32 @@ function Login(props) {
         return email.length > 0 && password.length > 0;
     }
 
+    function loginUser(credentials) {
+        axios
+          .post("http://localhost:8080/login", credentials)
+          .then((response) => {
+              console.info(response.data);
+              localStorage.setItem('user', JSON.stringify(response.data));
+          })
+          .catch((error) => console.error("There was an error!", error));
+    }    
+
     function handleSubmit(event) {
-        console.log(email)
-        console.log(password)
-        props.login({email, password}).then((gotAdmin) => {
+        loginUser({email, password});
+        const loggedInUser = localStorage.getItem("user");
+        console.log(loggedInUser)
+        if (loggedInUser) {
             setEmail("");
             setPassword("");
-            if (gotAdmin) {
-                navigate("/");
+            const foundUser = JSON.parse(loggedInUser);
+            if (foundUser.hasOwnProperty('restaurant')) {
+                navigate("/admin");
             } else {
                 navigate("/customer");
             }
-        })
+        } else {
+            console.log("here without user");
+        } 
         event.preventDefault();
     }
 
@@ -65,28 +78,4 @@ function Login(props) {
     );
 }
 
-let user = undefined;
-let gotAdmin = undefined;
-
-async function loginUser(credentials) {
-    await axios
-      .get("http://localhost:8080/login", {
-        params: credentials,
-      })
-      .then((response) => {
-        user = response.data.account;
-        gotAdmin = response.data.admin;
-      })
-      .catch((error) => console.error("There was an error!", error));
-    return gotAdmin;
-}
-
-/*function loginUser(credentials) {
-    axios
-      .post("http://localhost:8080/customer", credentials)
-      .then((response) => console.info(response))
-      .catch((error) => console.error("There was an error!", error));
-}*/
-
 export default Login;
-export {user, gotAdmin, loginUser};

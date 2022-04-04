@@ -21,7 +21,12 @@ public class RestaurantMapper implements Mapper<Restaurant, RestaurantDTO> {
 
     @Override
     public Restaurant convertFromDTO(RestaurantDTO restaurantDTO) {
-        return null;
+        return Restaurant.builder()
+                .name(restaurantDTO.getName())
+                .address(restaurantDTO.getAddress())
+                .deliveryZones(restaurantDTO.getDeliveryZones())
+                .address(restaurantDTO.getAddress())
+                .build();
     }
 
     @Override
@@ -30,6 +35,7 @@ public class RestaurantMapper implements Mapper<Restaurant, RestaurantDTO> {
                 .name(restaurant.getName())
                 .address(restaurant.getAddress())
                 .deliveryZones(restaurant.getDeliveryZones())
+                .administrator(restaurant.getAdministrator())
                 .build();
     }
 }

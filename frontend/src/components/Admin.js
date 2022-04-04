@@ -9,6 +9,7 @@ import AdminHome from './Admin/AdminHome';
 import AddRestaurant from './Admin/AddRestaurant';
 
 function Admin(props) {
+    
     return (
         <Routes>
             <Route path="/" element={<AdminHome/>}>

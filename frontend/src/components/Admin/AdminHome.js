@@ -1,7 +1,6 @@
 import React from 'react';
 import { Container, Nav, Navbar, Card, NavLink } from 'react-bootstrap';
 import {Outlet} from 'react-router-dom';
-
  
 export default function AdminHome() {
     return (

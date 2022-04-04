@@ -1,5 +1,6 @@
 package com.example.secondassignment.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,26 +22,28 @@ public class Restaurant {
     private Integer idRestaurant;
 
     @NonNull
-    @Column(name = "name", length = 100)
+    @Column(name = "name", length = 100, unique = true)
     private String name;
 
     @NonNull
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_address")
     private Address address;
 
     @NonNull
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "delivery_zone",
             joinColumns = @JoinColumn(name = "id_zone"),
             inverseJoinColumns = @JoinColumn(name = "id_restaurant"))
-    private List<Zone> deliveryZones;   // you already have the zones, pick from the from a dropdown menu and they will appear in the delivery zone table, along with restaurant id
+    private List<Zone> deliveryZones;
 
     @NonNull
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_administrator")
+    @JsonIgnore
     private Administrator administrator;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "restaurant", orphanRemoval = true)
     private List<Order> orders;
 }

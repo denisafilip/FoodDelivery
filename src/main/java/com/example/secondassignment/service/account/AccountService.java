@@ -11,5 +11,5 @@ public interface AccountService {
 
     AccountDTO getAccountDTO(LoginDTO loginDTO);
 
-    Map<String, Object> logIn(LoginDTO loginDTO);
+    AccountDTO logIn(LoginDTO loginDTO);
 }

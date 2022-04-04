@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import {Form, Button, Label, Dropdown, DropdownButton} from "react-bootstrap";
-import { ThemeConsumer } from "react-bootstrap/esm/ThemeProvider";
+import {Form, Button,} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import "../css/Register.css";
+import "../css/FormStyle.css";
 import axios from "axios";
 
 function Register(props) {
@@ -107,8 +106,15 @@ function Register(props) {
         console.log(userInfo);
     }
 
+    function registerCustomer(userInfo) {
+        axios
+          .post("http://localhost:8080/customer/register", userInfo)
+          .then((response) => console.info(response))
+          .catch((error) => console.error("There was an error!", error));
+    }
+
     function handleSubmit(event) {
-        props.register(userInfo);
+        registerCustomer(userInfo);
         console.log(userInfo);
         setUserInfo({
             firstName: "",
@@ -132,7 +138,7 @@ function Register(props) {
     }
 
     return (
-        <div className="Register">
+        <div className="FormStyle">
             <Form onSubmit={handleSubmit}>
                 <Form.Group size="lg" controlId="formBasicFirstName" className="mb-3">
                     <Form.Label>First Name</Form.Label>

@@ -1,13 +1,15 @@
 package com.example.secondassignment.controller;
 
 import com.example.secondassignment.DTO.AdministratorDTO;
-import com.example.secondassignment.DTO.LoginDTO;
 import com.example.secondassignment.DTO.RestaurantDTO;
 import com.example.secondassignment.mappers.AdministratorMapper;
 import com.example.secondassignment.model.Administrator;
-import com.example.secondassignment.model.Restaurant;
+import com.example.secondassignment.model.Zone;
 import com.example.secondassignment.service.administrator.AdministratorServiceImpl;
+import com.example.secondassignment.service.exceptions.InvalidDataException;
 import com.example.secondassignment.service.restaurant.RestaurantServiceImpl;
+import com.example.secondassignment.service.zone.ZoneServiceImpl;
+import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,9 @@ public class AdministratorController {
 
     @Autowired
     private RestaurantServiceImpl restaurantService;
+
+    @Autowired
+    private ZoneServiceImpl zoneService;
 
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -51,18 +56,29 @@ public class AdministratorController {
         }
     }*/
 
-    //restaurant operations
-    @PostMapping(value = "/restaurant")
-    public ResponseEntity<Restaurant> createRestaurant(@RequestBody Restaurant restaurant) {
+    @GetMapping("/addRestaurant")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<List<Zone>> register() {
         try {
-            RestaurantDTO _restaurant = restaurantService.save(restaurant);
-            return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
+            return new ResponseEntity<>(zoneService.findAll(), HttpStatus.ACCEPTED);
         } catch (Exception exception) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
         }
     }
 
-    @DeleteMapping(value = "/restaurant")
+    //restaurant operations
+    @PostMapping("/addRestaurant")
+    public ResponseEntity<RestaurantDTO> createRestaurant(@RequestBody(required = false)  RestaurantDTO restaurantDTO) throws DuplicateName, InvalidDataException {
+        System.out.println(restaurantDTO);
+        return new ResponseEntity<>(restaurantService.save(restaurantDTO), HttpStatus.CREATED);
+       /* try {
+            return new ResponseEntity<>(restaurantService.save(restaurantDTO), HttpStatus.CREATED);
+        } catch (Exception exception) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }*/
+    }
+
+    @DeleteMapping(value = "/deleteRestaurant")
     public ResponseEntity<String> deleteRestaurant(@RequestBody Integer id) {
         try {
             String msg = restaurantService.delete(id);

@@ -1,5 +1,6 @@
 package com.example.secondassignment.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
+@ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "administrator")
@@ -18,6 +20,8 @@ public class Administrator extends Account {
     private Integer idAdministrator;*/
 
     @OneToOne(mappedBy = "administrator", cascade = CascadeType.ALL, orphanRemoval = true)
+    //@JsonIgnore
+    @ToString.Exclude
     private Restaurant restaurant;
 
     @Builder(builderMethodName = "AdminBuilder")
