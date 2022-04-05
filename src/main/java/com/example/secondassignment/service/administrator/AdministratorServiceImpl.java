@@ -42,10 +42,10 @@ public class AdministratorServiceImpl implements AdministratorService {
     }
 
     @Override
-    public AdministratorDTO findByEmail(String email) {
+    public Administrator findByEmail(String email) {
         Optional<Administrator> administrator = administratorRepository.findByEmail(email);
 
-        return administrator.map(value -> AdministratorMapper.getInstance().convertToDTO(value)).orElse(null);
+        return administrator.orElse(null);
     }
 
 }

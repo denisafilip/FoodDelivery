@@ -1,26 +1,23 @@
 package com.example.secondassignment.service.restaurant;
 
 import com.example.secondassignment.DTO.RestaurantDTO;
+import com.example.secondassignment.DTO.ZoneDTO;
 import com.example.secondassignment.mappers.RestaurantMapper;
 import com.example.secondassignment.model.Address;
 import com.example.secondassignment.model.Administrator;
 import com.example.secondassignment.model.Restaurant;
-import com.example.secondassignment.repository.AdministratorRepository;
+import com.example.secondassignment.model.Zone;
 import com.example.secondassignment.repository.RestaurantRepository;
 import com.example.secondassignment.service.address.AddressService;
-import com.example.secondassignment.service.administrator.AdministratorService;
+import com.example.secondassignment.service.administrator.AdministratorServiceImpl;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
-import com.example.secondassignment.service.validators.AddressValidator;
+import com.example.secondassignment.service.restaurant.exceptions.DuplicateRestaurantNameException;
 import com.example.secondassignment.service.validators.NameValidator;
-import com.example.secondassignment.service.validators.UserEmailValidator;
-import com.example.secondassignment.service.validators.UserPasswordValidator;
-import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
+import com.example.secondassignment.service.zone.ZoneServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,7 +30,10 @@ public class RestaurantServiceImpl implements RestaurantService {
     private AddressService addressService;
 
     @Autowired
-    private AdministratorRepository administratorRepository;
+    private AdministratorServiceImpl administratorService;
+
+    @Autowired
+    private ZoneServiceImpl zoneService;
 
     public String validateRestaurant(String name) {
         try {
@@ -51,26 +51,39 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public RestaurantDTO save(RestaurantDTO restaurantDTO) throws DuplicateName, InvalidDataException {
+    public RestaurantDTO save(RestaurantDTO restaurantDTO) throws InvalidDataException, DuplicateRestaurantNameException {
         if (this.findByName(restaurantDTO.getName()) != null) {
-            throw new DuplicateName("A restaurant with the name " + restaurantDTO.getName() + " already exists!");
+            throw new DuplicateRestaurantNameException("A restaurant with the name " + restaurantDTO.getName() + " already exists!");
         }
-        Optional<Administrator> administrator = administratorRepository.findByEmail(restaurantDTO.getAdministrator().getEmail());
-        if (!administrator.isPresent()) {
+
+        Administrator administrator = administratorService.findByEmail(restaurantDTO.getAdministratorDTO().getEmail());
+        if (administrator == null) {
             throw new NoSuchElementException("No corresponding administrator was found!");
         }
+
         Address address = addressService.save(restaurantDTO.getAddress());
+
+        Set<Zone> zones = new HashSet<>();
+        for (ZoneDTO zoneDTO : restaurantDTO.getDeliveryZones()) {
+            Zone zone = zoneService.findByName(zoneDTO.getName());
+            if (zone != null) {
+                zones.add(zone);
+            }
+        }
 
         String validationMsg = validateRestaurant(restaurantDTO.getName());
         if (validationMsg != null) {
             throw new InvalidDataException("The details of the restaurant are incorrect!");
         }
 
-        restaurantDTO.setAddress(address);
-        restaurantDTO.setAdministrator(administrator.get());
+        Restaurant restaurant = Restaurant.builder()
+                .name(restaurantDTO.getName())
+                .address(address)
+                .administrator(administrator)
+                .deliveryZones(zones)
+                .build();
 
-        Restaurant restaurant = restaurantRepository.save(RestaurantMapper.getInstance().convertFromDTO(restaurantDTO));
-        return RestaurantMapper.getInstance().convertToDTO(restaurant);
+        return RestaurantMapper.getInstance().convertToDTO(restaurantRepository.save(restaurant));
     }
 
     @Override

@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ZoneService {
     List<Zone> findAll();
+
+    Zone findByName(String name);
 }

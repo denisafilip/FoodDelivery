@@ -14,11 +14,6 @@ import javax.persistence.*;
 @Table(name = "administrator")
 public class Administrator extends Account {
 
-    /*@Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name = "id_administrator", updatable = false, unique = true, nullable = false)
-    private Integer idAdministrator;*/
-
     @OneToOne(mappedBy = "administrator", cascade = CascadeType.ALL, orphanRemoval = true)
     //@JsonIgnore
     @ToString.Exclude

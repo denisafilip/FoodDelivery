@@ -15,11 +15,6 @@ import java.util.List;
 @Table(name = "customer")
 public class Customer extends Account {
 
-    /*@Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name = "id_customer", updatable = false, unique = true, nullable = false)
-    private Integer idCustomer;*/
-
     @NonNull
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_address")

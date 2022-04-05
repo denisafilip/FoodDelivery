@@ -2,10 +2,10 @@ package com.example.secondassignment.DTO;
 
 import com.example.secondassignment.model.Address;
 import com.example.secondassignment.model.Administrator;
-import com.example.secondassignment.model.Zone;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,8 +22,8 @@ public class RestaurantDTO {
     private Address address;
 
     @NonNull
-    private List<Zone> deliveryZones;
+    private Set<ZoneDTO> deliveryZones;
 
     @NonNull
-    private Administrator administrator;
+    private AdministratorDTO administratorDTO;
 }

@@ -25,8 +25,8 @@ public class Menu {
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "food_menu",
-            joinColumns = @JoinColumn(name = "id_food"),
-            inverseJoinColumns = @JoinColumn(name = "id_menu"))
+            joinColumns = @JoinColumn(name = "id_menu"),
+            inverseJoinColumns = @JoinColumn(name = "id_food"))
     private List<Food> foods;
 
 }

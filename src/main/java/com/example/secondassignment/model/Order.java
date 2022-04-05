@@ -40,8 +40,8 @@ public class Order {
     @NonNull
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "food_order",
-            joinColumns = @JoinColumn(name = "id_food"),
-            inverseJoinColumns = @JoinColumn(name = "id_order"))
+            joinColumns = @JoinColumn(name = "id_order"),
+            inverseJoinColumns = @JoinColumn(name = "id_food"))
     private List<Food> foods;
 
 

@@ -8,6 +8,7 @@ import com.example.secondassignment.model.Zone;
 import com.example.secondassignment.service.administrator.AdministratorServiceImpl;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
 import com.example.secondassignment.service.restaurant.RestaurantServiceImpl;
+import com.example.secondassignment.service.restaurant.exceptions.DuplicateRestaurantNameException;
 import com.example.secondassignment.service.zone.ZoneServiceImpl;
 import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +69,7 @@ public class AdministratorController {
 
     //restaurant operations
     @PostMapping("/addRestaurant")
-    public ResponseEntity<RestaurantDTO> createRestaurant(@RequestBody(required = false)  RestaurantDTO restaurantDTO) throws DuplicateName, InvalidDataException {
+    public ResponseEntity<RestaurantDTO> createRestaurant(@RequestBody(required = false)  RestaurantDTO restaurantDTO) throws InvalidDataException, DuplicateRestaurantNameException {
         System.out.println(restaurantDTO);
         return new ResponseEntity<>(restaurantService.save(restaurantDTO), HttpStatus.CREATED);
        /* try {

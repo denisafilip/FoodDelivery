@@ -28,6 +28,10 @@ public class Food {
     private Integer price;
 
     @NonNull
+    @Column(name = "description")
+    private String description;
+
+    @NonNull
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_category")
     private Category category;

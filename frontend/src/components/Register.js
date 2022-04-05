@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "../css/FormStyle.css";
 import axios from "axios";
 
-function Register(props) {
+function Register() {
     const [addressState, setAddressState] = useState({
         street: "",
         number: "",
@@ -221,12 +221,4 @@ function Register(props) {
 </DropdownButton>
 */
 
-function registerCustomer(userInfo) {
-    axios
-      .post("http://localhost:8080/customer/register", userInfo)
-      .then((response) => console.info(response))
-      .catch((error) => console.error("There was an error!", error));
-}
-
 export default Register;
-export {registerCustomer};

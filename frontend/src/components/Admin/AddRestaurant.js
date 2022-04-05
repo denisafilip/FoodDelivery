@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../css/FormStyle.css";
 
-function AddRestaurant(props) {
+function AddRestaurant() {
     const [addressState, setAddressState] = useState({
         street: "",
         number: "",
@@ -27,7 +27,7 @@ function AddRestaurant(props) {
             postalCode: ""
         },
         deliveryZones: [],
-        administrator: {}
+        administratorDTO: {}
     });
     const [zones, setZones] = useState([]);
 
@@ -38,12 +38,10 @@ function AddRestaurant(props) {
             setRestaurantInfo(prevState => {
                 return {
                     ...prevState,
-                    administrator: foundUser
+                    administratorDTO: foundUser
                 };
             })
         }
-        
-        console.log(restaurantInfo.administrator);
       }, []);
 
     useEffect(() => {
@@ -193,7 +191,7 @@ function AddRestaurant(props) {
                 <div className="select-container">
                     <select multiple={true} value={restaurantInfo.deliveryZones} onChange={handleDeliveryZoneAddition}>
                         {zones.map(zone =>
-                            <option value={zone.idZone} key={zone.idZone}>{zone.name}</option>
+                            <option value={zone.name} key={zone.idZone}>{zone.name}</option>
                         )}
                     </select>
                 </div>

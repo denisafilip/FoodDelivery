@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -33,9 +34,9 @@ public class Restaurant {
     @NonNull
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "delivery_zone",
-            joinColumns = @JoinColumn(name = "id_zone"),
-            inverseJoinColumns = @JoinColumn(name = "id_restaurant"))
-    private List<Zone> deliveryZones;
+            joinColumns = @JoinColumn(name = "id_restaurant"),
+            inverseJoinColumns = @JoinColumn(name = "id_zone"))
+    private Set<Zone> deliveryZones;
 
     @NonNull
     @OneToOne(cascade = CascadeType.MERGE)

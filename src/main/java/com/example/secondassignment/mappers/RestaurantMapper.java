@@ -1,7 +1,12 @@
 package com.example.secondassignment.mappers;
 
+import com.example.secondassignment.DTO.AdministratorDTO;
 import com.example.secondassignment.DTO.RestaurantDTO;
 import com.example.secondassignment.model.Restaurant;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.stream.Collectors;
 
 public class RestaurantMapper implements Mapper<Restaurant, RestaurantDTO> {
 
@@ -21,12 +26,7 @@ public class RestaurantMapper implements Mapper<Restaurant, RestaurantDTO> {
 
     @Override
     public Restaurant convertFromDTO(RestaurantDTO restaurantDTO) {
-        return Restaurant.builder()
-                .name(restaurantDTO.getName())
-                .address(restaurantDTO.getAddress())
-                .deliveryZones(restaurantDTO.getDeliveryZones())
-                .address(restaurantDTO.getAddress())
-                .build();
+        return null;
     }
 
     @Override
@@ -34,8 +34,10 @@ public class RestaurantMapper implements Mapper<Restaurant, RestaurantDTO> {
         return RestaurantDTO.builder()
                 .name(restaurant.getName())
                 .address(restaurant.getAddress())
-                .deliveryZones(restaurant.getDeliveryZones())
-                .administrator(restaurant.getAdministrator())
+                .deliveryZones(restaurant.getDeliveryZones().stream()
+                        .map(ZoneMapper.getInstance()::convertToDTO)
+                        .collect(Collectors.toSet()))
+                .administratorDTO(AdministratorMapper.getInstance().convertToDTO(restaurant.getAdministrator()))
                 .build();
     }
 }

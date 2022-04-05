@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,5 +23,12 @@ public class ZoneServiceImpl implements ZoneService {
     @Override
     public List<Zone> findAll() {
         return zoneRepository.findAll();
+    }
+
+    @Override
+    public Zone findByName(String name) {
+        Optional<Zone> zone = zoneRepository.findByName(name);
+
+        return zone.orElse(null);
     }
 }

@@ -13,5 +13,5 @@ public interface AdministratorService {
 
     List<AdministratorDTO> findAll();
 
-    AdministratorDTO findByEmail(String email);
+    Administrator findByEmail(String email);
 }
