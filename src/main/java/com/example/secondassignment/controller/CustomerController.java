@@ -1,9 +1,9 @@
 package com.example.secondassignment.controller;
 
-import com.example.secondassignment.DTO.CustomerDTO;
+import com.example.secondassignment.model.DTO.CustomerDTO;
 import com.example.secondassignment.model.Zone;
-import com.example.secondassignment.service.customer.CustomerServiceImpl;
-import com.example.secondassignment.service.zone.ZoneServiceImpl;
+import com.example.secondassignment.service.account.customer.CustomerServiceImpl;
+import com.example.secondassignment.service.address.zone.ZoneServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

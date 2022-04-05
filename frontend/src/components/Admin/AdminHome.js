@@ -11,7 +11,7 @@ export default function AdminHome() {
         const loggedInUser = localStorage.getItem("user");
         if (loggedInUser) {
             foundUser = JSON.parse(loggedInUser);
-           
+            console.log(foundUser.restaurant);
             setAdmin(foundUser);
         }
         
@@ -19,6 +19,7 @@ export default function AdminHome() {
 
     function disableAddRestaurant(e) {
         console.log(foundUser);
+        console.log(foundUser.restaurant);
         if (foundUser.restaurant != null) e.preventDefault();
     }
     
@@ -29,6 +30,7 @@ export default function AdminHome() {
                     <Navbar.Brand href="/admin/">Administrator</Navbar.Brand>
                     <Nav className="me-auto">
                         <Nav.Link href="/admin/addRestaurant" onClick={disableAddRestaurant}>Add Restaurant</Nav.Link>
+                        <Nav.Link href="/admin/addFood">Add Food</Nav.Link>
                         <Nav.Link href="/admin/viewOrders">View Orders</Nav.Link>
                     </Nav>
                 </Container>

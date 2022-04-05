@@ -9,7 +9,9 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @RequiredArgsConstructor
 @Table(name = "food")
 public class Food {
@@ -20,7 +22,7 @@ public class Food {
     private Integer idFood;
 
     @NonNull
-    @Column(name = "name", unique = true, length = 100)
+    @Column(name = "name", length = 100)
     private String name;
 
     @NonNull
@@ -32,16 +34,16 @@ public class Food {
     private String description;
 
     @NonNull
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_category")
     private Category category;
+
+    @NonNull
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "id_restaurant")
+    private Restaurant restaurant;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "foods")
     private List<Order> orders;
-
-    @JsonIgnore
-    @ManyToMany(mappedBy = "foods")
-    private List<Menu> menus;
-
 }

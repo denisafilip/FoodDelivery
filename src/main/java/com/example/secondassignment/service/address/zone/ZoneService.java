@@ -1,4 +1,4 @@
-package com.example.secondassignment.service.zone;
+package com.example.secondassignment.service.address.zone;
 
 import com.example.secondassignment.model.Zone;
 

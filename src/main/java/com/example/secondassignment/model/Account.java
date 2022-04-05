@@ -3,9 +3,7 @@ package com.example.secondassignment.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 
-//@Entity
 @Getter
 @Setter
 @Builder
@@ -13,8 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass
-//@Table(name = "user")
-//@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Account {
 
     @Id

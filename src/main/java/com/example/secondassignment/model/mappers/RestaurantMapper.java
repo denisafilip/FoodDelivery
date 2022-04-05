@@ -1,10 +1,7 @@
-package com.example.secondassignment.mappers;
+package com.example.secondassignment.model.mappers;
 
-import com.example.secondassignment.DTO.AdministratorDTO;
-import com.example.secondassignment.DTO.RestaurantDTO;
+import com.example.secondassignment.model.DTO.RestaurantDTO;
 import com.example.secondassignment.model.Restaurant;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 

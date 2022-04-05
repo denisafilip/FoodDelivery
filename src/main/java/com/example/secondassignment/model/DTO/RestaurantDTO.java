@@ -1,10 +1,8 @@
-package com.example.secondassignment.DTO;
+package com.example.secondassignment.model.DTO;
 
 import com.example.secondassignment.model.Address;
-import com.example.secondassignment.model.Administrator;
 import lombok.*;
 
-import java.util.List;
 import java.util.Set;
 
 @Getter

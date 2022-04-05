@@ -1,16 +1,7 @@
-package com.example.secondassignment.mappers;
+package com.example.secondassignment.model.mappers;
 
-import com.example.secondassignment.DTO.AdministratorDTO;
-import com.example.secondassignment.DTO.CustomerDTO;
+import com.example.secondassignment.model.DTO.AdministratorDTO;
 import com.example.secondassignment.model.Administrator;
-import com.example.secondassignment.repository.AdministratorRepository;
-import com.example.secondassignment.service.administrator.AdministratorService;
-import com.example.secondassignment.service.administrator.AdministratorServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 public class AdministratorMapper implements Mapper<Administrator, AdministratorDTO> {
 

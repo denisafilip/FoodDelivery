@@ -1,31 +1,20 @@
-package com.example.secondassignment.service.customer;
+package com.example.secondassignment.service.account.customer;
 
-import com.example.secondassignment.DTO.AccountDTO;
-import com.example.secondassignment.DTO.AdministratorDTO;
-import com.example.secondassignment.DTO.CustomerDTO;
-import com.example.secondassignment.DTO.LoginDTO;
-import com.example.secondassignment.mappers.AdministratorMapper;
-import com.example.secondassignment.mappers.CustomerMapper;
+import com.example.secondassignment.model.DTO.CustomerDTO;
+import com.example.secondassignment.model.mappers.CustomerMapper;
 import com.example.secondassignment.model.Address;
-import com.example.secondassignment.model.Administrator;
 import com.example.secondassignment.model.Customer;
 import com.example.secondassignment.repository.CustomerRepository;
 import com.example.secondassignment.service.address.AddressService;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
-import com.example.secondassignment.service.validators.AddressValidator;
 import com.example.secondassignment.service.validators.NameValidator;
 import com.example.secondassignment.service.validators.UserEmailValidator;
 import com.example.secondassignment.service.validators.UserPasswordValidator;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 

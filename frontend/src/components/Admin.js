@@ -1,19 +1,15 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, HashRouter, Route, Routes } from 'react-router-dom';
-import {Form, Button} from "react-bootstrap";
-import { ThemeConsumer } from "react-bootstrap/esm/ThemeProvider";
-import { useNavigate } from "react-router-dom";
-import "../css/Login.css";
-import axios from "axios";
+import {Route, Routes } from 'react-router-dom';
 import AdminHome from './Admin/AdminHome';
 import AddRestaurant from './Admin/AddRestaurant';
+import AddFood from './Admin/AddFood';
 
-function Admin(props) {
-    
+function Admin() {
     return (
         <Routes>
             <Route path="/" element={<AdminHome/>}>
                 <Route path="addRestaurant" element={<AddRestaurant/>}></Route>
+                <Route path="addFood" element={<AddFood/>}></Route>
             </Route>
         </Routes>
     );

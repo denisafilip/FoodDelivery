@@ -1,12 +1,7 @@
-package com.example.secondassignment.mappers;
+package com.example.secondassignment.model.mappers;
 
-import com.example.secondassignment.DTO.ZoneDTO;
+import com.example.secondassignment.model.DTO.ZoneDTO;
 import com.example.secondassignment.model.Zone;
-import com.example.secondassignment.repository.ZoneRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 public class ZoneMapper implements Mapper<Zone, ZoneDTO> {
 

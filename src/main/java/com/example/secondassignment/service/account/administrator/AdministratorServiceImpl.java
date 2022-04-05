@@ -1,19 +1,14 @@
-package com.example.secondassignment.service.administrator;
+package com.example.secondassignment.service.account.administrator;
 
-import com.example.secondassignment.DTO.AdministratorDTO;
-import com.example.secondassignment.DTO.LoginDTO;
-import com.example.secondassignment.mappers.AdministratorMapper;
-import com.example.secondassignment.mappers.CustomerMapper;
-import com.example.secondassignment.mappers.RestaurantMapper;
+import com.example.secondassignment.model.DTO.AdministratorDTO;
+import com.example.secondassignment.model.mappers.AdministratorMapper;
 import com.example.secondassignment.model.Administrator;
-import com.example.secondassignment.model.Customer;
 import com.example.secondassignment.repository.AdministratorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 

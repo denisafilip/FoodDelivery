@@ -1,12 +1,10 @@
 package com.example.secondassignment.service.account;
 
-import com.example.secondassignment.DTO.AccountDTO;
-import com.example.secondassignment.DTO.AdministratorDTO;
-import com.example.secondassignment.DTO.CustomerDTO;
-import com.example.secondassignment.DTO.LoginDTO;
-import com.example.secondassignment.mappers.AccountMapper;
-import com.example.secondassignment.mappers.AdministratorMapper;
-import com.example.secondassignment.mappers.CustomerMapper;
+import com.example.secondassignment.model.DTO.AccountDTO;
+import com.example.secondassignment.model.DTO.LoginDTO;
+import com.example.secondassignment.model.mappers.AccountMapper;
+import com.example.secondassignment.model.mappers.AdministratorMapper;
+import com.example.secondassignment.model.mappers.CustomerMapper;
 import com.example.secondassignment.model.Account;
 import com.example.secondassignment.model.Administrator;
 import com.example.secondassignment.model.Customer;
@@ -16,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 

@@ -45,6 +45,10 @@ public class Restaurant {
     private Administrator administrator;
 
     @JsonIgnore
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    private Set<Food> foods;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "restaurant", orphanRemoval = true)
     private List<Order> orders;
 }

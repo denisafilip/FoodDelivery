@@ -1,6 +1,6 @@
-package com.example.secondassignment.mappers;
+package com.example.secondassignment.model.mappers;
 
-import com.example.secondassignment.DTO.CustomerDTO;
+import com.example.secondassignment.model.DTO.CustomerDTO;
 import com.example.secondassignment.model.Customer;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 

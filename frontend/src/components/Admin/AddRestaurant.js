@@ -119,7 +119,10 @@ function AddRestaurant() {
     function addRestaurant(restaurantInfo) {
         axios
           .post("http://localhost:8080/admin/addRestaurant", restaurantInfo)
-          .then((response) => console.info(response))
+          .then((response) => {
+              console.info(response);
+              localStorage.setItem('restaurant', JSON.stringify(response.data));
+          })
           .catch((error) => console.error("There was an error!", error));
     }
 

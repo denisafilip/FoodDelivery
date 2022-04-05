@@ -1,6 +1,6 @@
-package com.example.secondassignment.mappers;
+package com.example.secondassignment.model.mappers;
 
-import com.example.secondassignment.DTO.AccountDTO;
+import com.example.secondassignment.model.DTO.AccountDTO;
 import com.example.secondassignment.model.Account;
 
 public class AccountMapper implements Mapper<Account, AccountDTO> {

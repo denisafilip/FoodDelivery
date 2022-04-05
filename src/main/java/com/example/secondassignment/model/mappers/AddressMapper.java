@@ -1,6 +1,6 @@
-package com.example.secondassignment.mappers;
+package com.example.secondassignment.model.mappers;
 
-import com.example.secondassignment.DTO.AddressDTO;
+import com.example.secondassignment.model.DTO.AddressDTO;
 import com.example.secondassignment.model.Address;
 
 public class AddressMapper implements Mapper<Address, AddressDTO> {

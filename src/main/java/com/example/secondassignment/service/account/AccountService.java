@@ -1,9 +1,7 @@
 package com.example.secondassignment.service.account;
 
-import com.example.secondassignment.DTO.AccountDTO;
-import com.example.secondassignment.DTO.LoginDTO;
-
-import java.util.Map;
+import com.example.secondassignment.model.DTO.AccountDTO;
+import com.example.secondassignment.model.DTO.LoginDTO;
 
 public interface AccountService {
 

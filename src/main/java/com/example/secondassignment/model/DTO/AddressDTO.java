@@ -1,4 +1,4 @@
-package com.example.secondassignment.DTO;
+package com.example.secondassignment.model.DTO;
 
 import com.example.secondassignment.model.Zone;
 import lombok.*;

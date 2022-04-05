@@ -1,9 +1,7 @@
-package com.example.secondassignment.service.customer;
+package com.example.secondassignment.service.account.customer;
 
 
-import com.example.secondassignment.DTO.AccountDTO;
-import com.example.secondassignment.DTO.CustomerDTO;
-import com.example.secondassignment.DTO.LoginDTO;
+import com.example.secondassignment.model.DTO.CustomerDTO;
 import com.example.secondassignment.model.Customer;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
 import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;

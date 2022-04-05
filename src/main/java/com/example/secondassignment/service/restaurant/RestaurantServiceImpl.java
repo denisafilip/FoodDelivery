@@ -1,19 +1,19 @@
 package com.example.secondassignment.service.restaurant;
 
-import com.example.secondassignment.DTO.RestaurantDTO;
-import com.example.secondassignment.DTO.ZoneDTO;
-import com.example.secondassignment.mappers.RestaurantMapper;
+import com.example.secondassignment.model.DTO.RestaurantDTO;
+import com.example.secondassignment.model.DTO.ZoneDTO;
+import com.example.secondassignment.model.mappers.RestaurantMapper;
 import com.example.secondassignment.model.Address;
 import com.example.secondassignment.model.Administrator;
 import com.example.secondassignment.model.Restaurant;
 import com.example.secondassignment.model.Zone;
 import com.example.secondassignment.repository.RestaurantRepository;
 import com.example.secondassignment.service.address.AddressService;
-import com.example.secondassignment.service.administrator.AdministratorServiceImpl;
+import com.example.secondassignment.service.account.administrator.AdministratorServiceImpl;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
 import com.example.secondassignment.service.restaurant.exceptions.DuplicateRestaurantNameException;
 import com.example.secondassignment.service.validators.NameValidator;
-import com.example.secondassignment.service.zone.ZoneServiceImpl;
+import com.example.secondassignment.service.address.zone.ZoneServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,9 +45,9 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public RestaurantDTO findByName(String name) {
+    public Restaurant findByName(String name) {
         Optional<Restaurant> restaurant = restaurantRepository.findByName(name);
-        return restaurant.map(value -> RestaurantMapper.getInstance().convertToDTO(value)).orElse(null);
+        return restaurant.orElse(null);
     }
 
     @Override

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {Form, Button} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import "../css/Login.css";
+import "../css/FormStyle.css";
 import axios from "axios";
 
 function Login(props) {
@@ -48,7 +48,7 @@ function Login(props) {
     }
 
     return (
-        <div className="Login">
+        <div className="FormStyle">
             <Form onSubmit={handleSubmit}>
                 <Form.Group size="lg" controlId="formBasicEmail" className="mb-3">
                     <Form.Label>Email</Form.Label>

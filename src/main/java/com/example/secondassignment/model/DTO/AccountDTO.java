@@ -1,6 +1,5 @@
-package com.example.secondassignment.DTO;
+package com.example.secondassignment.model.DTO;
 
-import com.example.secondassignment.model.Address;
 import lombok.*;
 
 @Getter

@@ -1,7 +1,6 @@
-package com.example.secondassignment.service.administrator;
+package com.example.secondassignment.service.account.administrator;
 
-import com.example.secondassignment.DTO.AdministratorDTO;
-import com.example.secondassignment.DTO.LoginDTO;
+import com.example.secondassignment.model.DTO.AdministratorDTO;
 import com.example.secondassignment.model.Administrator;
 
 import javax.transaction.Transactional;

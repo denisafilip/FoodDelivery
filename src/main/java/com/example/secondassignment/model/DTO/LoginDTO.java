@@ -1,4 +1,4 @@
-package com.example.secondassignment.DTO;
+package com.example.secondassignment.model.DTO;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;

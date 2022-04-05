@@ -1,4 +1,4 @@
-package com.example.secondassignment.mappers;
+package com.example.secondassignment.model.mappers;
 
 public interface Mapper<T, V> {
 

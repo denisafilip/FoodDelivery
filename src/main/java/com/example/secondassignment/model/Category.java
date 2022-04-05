@@ -1,5 +1,6 @@
 package com.example.secondassignment.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ public class Category {
     @Column(name = "name", length = 100)
     private String name;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "category", orphanRemoval = true)
     private List<Food> foods;
 
