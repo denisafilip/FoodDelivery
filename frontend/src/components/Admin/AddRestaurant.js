@@ -29,7 +29,7 @@ function AddRestaurant() {
         deliveryZones: [],
         administratorDTO: {}
     });
-    const [zones, setZones] = useState([]);
+    const [zones, setZones] = useState(JSON.parse(localStorage.getItem("zones")));
 
     useEffect(() => {
         const loggedInUser = localStorage.getItem("user");
@@ -44,11 +44,11 @@ function AddRestaurant() {
         }
       }, []);
 
-    useEffect(() => {
+    /*useEffect(() => {
         fetch('http://localhost:8080/admin/addRestaurant')
           .then(response => response.json())
           .then(setZones);
-        }, []);
+        }, []);*/
 
     const navigate = useNavigate();
 

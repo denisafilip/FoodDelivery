@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {Form, Button, Divider, Card} from "react-bootstrap";
+import {Form, Button, Card} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../css/FormStyle.css";
@@ -33,7 +33,8 @@ function AddFood() {
         fetch('http://localhost:8080/admin/addFood')
           .then(response => response.json())
           .then(setFoodCategories);
-        }, []);
+        localStorage.setItem('foodCategories', JSON.stringify(foodCategories));
+    }, []);
 
     const navigate = useNavigate();
 
@@ -107,7 +108,7 @@ function AddFood() {
 
             <div className="select-container">
                 <select value={foodInfo.category.idCategory} onChange={handleSelect}>
-                    {foodCategories.map(category =>
+                    {foodCategories?.map(category =>
                         <option value={category.idCategory} key={category.idCategory}>{category.name}</option>
                     )}
                 </select>

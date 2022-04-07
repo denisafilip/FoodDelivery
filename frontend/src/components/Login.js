@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "../css/FormStyle.css";
 import axios from "axios";
 
-function Login(props) {
+function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -36,8 +36,10 @@ function Login(props) {
             setEmail("");
             setPassword("");
             const foundUser = JSON.parse(loggedInUser);
-            if (foundUser.hasOwnProperty('restaurant')) {
-                navigate("/admin");
+            if (foundUser.hasOwnProperty('restaurant') && foundUser.restaurant == null) {
+                navigate("/admin/addRestaurant");
+            } else if (foundUser.hasOwnProperty('restaurant')) {
+                navigate('/admin')
             } else {
                 navigate("/customer");
             }

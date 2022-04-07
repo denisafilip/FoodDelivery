@@ -14,6 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
+@ToString
 @Table(name = "restaurant")
 public class Restaurant {
 
@@ -42,13 +43,14 @@ public class Restaurant {
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_administrator")
     @JsonIgnore
+    @ToString.Exclude
     private Administrator administrator;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private Set<Food> foods;
 
     @JsonIgnore
+    @ToString.Exclude
     @OneToMany(mappedBy = "restaurant", orphanRemoval = true)
     private List<Order> orders;
 }

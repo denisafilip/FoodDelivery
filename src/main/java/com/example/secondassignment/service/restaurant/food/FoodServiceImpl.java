@@ -1,6 +1,7 @@
 package com.example.secondassignment.service.restaurant.food;
 
 import com.example.secondassignment.model.DTO.FoodDTO;
+import com.example.secondassignment.model.mappers.AdministratorMapper;
 import com.example.secondassignment.model.mappers.FoodMapper;
 import com.example.secondassignment.model.*;
 import com.example.secondassignment.repository.FoodRepository;
@@ -12,8 +13,11 @@ import com.example.secondassignment.service.validators.NumberValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FoodServiceImpl implements FoodService {
@@ -38,6 +42,22 @@ public class FoodServiceImpl implements FoodService {
     public Food findByNameAndRestaurant(String name, Restaurant restaurant) {
         Optional<Food> food = foodRepository.findByNameAndRestaurant(name, restaurant);
         return food.orElse(null);
+    }
+
+    @Override
+    public List<FoodDTO> findByRestaurant(String restaurantName) {
+        Restaurant restaurant = restaurantService.findByName(restaurantName);
+
+        if (restaurant == null) {
+            throw new NoSuchElementException();
+        }
+
+        Optional<List<Food>> foods = foodRepository.findByRestaurant(restaurant);
+        System.out.println(foods);
+
+        return foods.map(foodList -> foodList.stream()
+                .map(FoodMapper.getInstance()::convertToDTO)
+                .collect(Collectors.toList())).orElseGet(ArrayList::new);
     }
 
     @Override

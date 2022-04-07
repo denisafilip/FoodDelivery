@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
@@ -39,11 +40,14 @@ public class Food {
     private Category category;
 
     @NonNull
+    @JsonIgnore
+    @ToString.Exclude
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_restaurant")
     private Restaurant restaurant;
 
     @JsonIgnore
+    @ToString.Exclude
     @ManyToMany(mappedBy = "foods")
     private List<Order> orders;
 }

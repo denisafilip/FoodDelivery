@@ -102,6 +102,17 @@ public class AdministratorController {
         return new ResponseEntity<>(foodService.save(foodDTO), HttpStatus.CREATED);
     }
 
+    /*@GetMapping("/viewMenu")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<List<FoodDTO>> getFoodCategories(@Param("restaurantName") String restaurantName) {
+        System.out.println(restaurantName);
+        try {
+            return new ResponseEntity<>(foodService.findByRestaurant(restaurantName), HttpStatus.ACCEPTED);
+        } catch (Exception exception) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }*/
+
     //order operations
 
 }

@@ -35,6 +35,7 @@ public class RestaurantMapper implements Mapper<Restaurant, RestaurantDTO> {
                         .map(ZoneMapper.getInstance()::convertToDTO)
                         .collect(Collectors.toSet()))
                 .administratorDTO(AdministratorMapper.getInstance().convertToDTO(restaurant.getAdministrator()))
+                .foods(restaurant.getFoods())
                 .build();
     }
 }

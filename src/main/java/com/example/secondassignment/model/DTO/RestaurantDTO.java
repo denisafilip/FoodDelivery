@@ -1,8 +1,10 @@
 package com.example.secondassignment.model.DTO;
 
 import com.example.secondassignment.model.Address;
+import com.example.secondassignment.model.Food;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -24,4 +26,7 @@ public class RestaurantDTO {
 
     @NonNull
     private AdministratorDTO administratorDTO;
+
+    @NonNull
+    private Set<Food> foods;
 }
