@@ -35,6 +35,7 @@ public class CustomerServiceImpl implements CustomerService {
             new UserPasswordValidator().validate(password);
             return null;
         } catch (InvalidDataException e) {
+            e.printStackTrace();
             return e.getMessage();
         }
     }
@@ -73,13 +74,6 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         customerDTO.setAddress(address);
-        /*Customer c = Customer.CustomerBuilder()
-                .address(address)
-                .email(customerDTO.getEmail())
-                .firstName(customerDTO.getFirstName())
-                .lastName(customerDTO.getLastName())
-                .password(BCrypt.hashpw(customerDTO.getPassword(), BCrypt.gensalt(12)))
-                .build();*/
         Customer c = CustomerMapper.getInstance().convertFromDTO(customerDTO);
         customerRepository.save(c);
         return CustomerMapper.getInstance().convertToDTO(c);

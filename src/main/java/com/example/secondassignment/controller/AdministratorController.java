@@ -16,6 +16,7 @@ import com.example.secondassignment.service.restaurant.RestaurantServiceImpl;
 import com.example.secondassignment.service.restaurant.exceptions.DuplicateRestaurantNameException;
 import com.example.secondassignment.service.address.zone.ZoneServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -48,6 +49,13 @@ public class AdministratorController {
         return administratorService.findAll();
     }
 
+    @GetMapping("/get")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public AdministratorDTO getCurrentAdministrator(@Param("adminEmail") String adminEmail) {
+        System.out.println(adminEmail);
+        return AdministratorMapper.getInstance().convertToDTO(administratorService.findByEmail(adminEmail));
+    }
+
     @PostMapping("/save")
     public ResponseEntity<AdministratorDTO> save(@Validated @RequestBody Administrator administrator) {
         try {
@@ -70,7 +78,7 @@ public class AdministratorController {
 
     //restaurant operations
     @PostMapping("/addRestaurant")
-    public ResponseEntity<RestaurantDTO> addRestaurant(@RequestBody(required = false)  RestaurantDTO restaurantDTO) throws
+    public ResponseEntity<RestaurantDTO> addRestaurant(@RequestBody(required = false) RestaurantDTO restaurantDTO) throws
             InvalidDataException, DuplicateRestaurantNameException {
         return new ResponseEntity<>(restaurantService.save(restaurantDTO), HttpStatus.CREATED);
     }

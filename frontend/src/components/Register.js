@@ -211,14 +211,4 @@ function Register() {
     );
 }
 
-/*
-/*<DropdownButton name="zone" id="dropdown-basic-button" title="Address Zone" value={addressState.zone} onSelect={handleSelect}>
-    {zones.map(zone =>
-        <div key={zone.idZone}>
-            <Dropdown.Item eventKey={zone.name}>{zone.name}</Dropdown.Item>
-        </div>
-    )}
-</DropdownButton>
-*/
-
 export default Register;

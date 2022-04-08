@@ -10,12 +10,12 @@ function AddFood() {
         price: 0,
         description: "",
         category: {},
-        restaurantDTO: {}
+        restaurantDTO: JSON.parse(localStorage.getItem("user")).restaurant
     });
-    const [foodCategories, setFoodCategories] = useState([]);
-    const [admin, setAdmin] = useState({});
+    const [foodCategories, setFoodCategories] = useState(JSON.parse(localStorage.getItem("foodCategories")));
+    const [admin, setAdmin] = useState(JSON.parse(localStorage.getItem("user")));
 
-    useEffect(() => {
+    /*useEffect(() => {
         const loggedInUser = localStorage.getItem("user");
         if (loggedInUser) {
             const foundUser = JSON.parse(loggedInUser);
@@ -27,14 +27,8 @@ function AddFood() {
                 };
             })
         }
-      }, []);
+      }, []);*/
 
-    useEffect(() => {
-        fetch('http://localhost:8080/admin/addFood')
-          .then(response => response.json())
-          .then(setFoodCategories);
-        localStorage.setItem('foodCategories', JSON.stringify(foodCategories));
-    }, []);
 
     const navigate = useNavigate();
 
@@ -64,34 +58,37 @@ function AddFood() {
         console.log(foodInfo);
     }
 
-    function handleDeliveryZoneAddition(event) {
-        let value = Array.from(
-          event.target.selectedOptions,
-          (option) => option.value
-        );
-        setRestaurantInfo(prevState => {
-            return {
-              ...prevState,
-              deliveryZones: value
-            };
-        })
-    }
-
-    function addFood() {
-        axios
+    const addFood = async() => {
+        await axios
           .post("http://localhost:8080/admin/addFood", foodInfo)
           .then((response) => console.info(response))
           .catch((error) => console.error("There was an error when adding food!", error));
     }
 
+    const updateState = async() => {
+        console.log(admin.email);
+        await addFood();
+        axios
+          .get("http://localhost:8080/admin/get", {
+              params: {
+                  adminEmail: admin.email
+              }
+          })
+          .then((response) => {
+                localStorage.setItem('user', JSON.stringify(response.data));
+                console.log(response.data);
+          })
+          .catch((error) => console.error("There was an error when adding food!", error));
+    }
+
     function handleSubmit(event) {
-        addFood();
-        console.log(foodInfo);
+        updateState();
         setFoodInfo({
             name: "",
             price: 0,
             description: "",
-            category: {}
+            category: {},
+            restaurantDTO: JSON.parse(localStorage.getItem("user")).restaurant
         })
         navigate("/admin/addFood");
         event.preventDefault();

@@ -27,11 +27,11 @@ function AddRestaurant() {
             postalCode: ""
         },
         deliveryZones: [],
-        administratorDTO: {}
+        administratorDTO: useState(JSON.parse(localStorage.getItem("zones")))
     });
     const [zones, setZones] = useState(JSON.parse(localStorage.getItem("zones")));
 
-    useEffect(() => {
+    /*useEffect(() => {
         const loggedInUser = localStorage.getItem("user");
         if (loggedInUser) {
             const foundUser = JSON.parse(loggedInUser);
@@ -42,13 +42,7 @@ function AddRestaurant() {
                 };
             })
         }
-      }, []);
-
-    /*useEffect(() => {
-        fetch('http://localhost:8080/admin/addRestaurant')
-          .then(response => response.json())
-          .then(setZones);
-        }, []);*/
+      }, []);*/
 
     const navigate = useNavigate();
 
@@ -116,8 +110,8 @@ function AddRestaurant() {
         })
     }
 
-    function addRestaurant(restaurantInfo) {
-        axios
+    const addRestaurant = async() => {
+        await axios
           .post("http://localhost:8080/admin/addRestaurant", restaurantInfo)
           .then((response) => {
               console.info(response);
@@ -126,15 +120,22 @@ function AddRestaurant() {
           .catch((error) => console.error("There was an error!", error));
     }
 
+    const updateRestaurants = async() => {
+        await addRestaurant();
+        axios
+            .get('http://localhost:8080/customer/viewRestaurants')
+            .then(response => {
+                localStorage.setItem('restaurants', JSON.stringify(response.data));
+            });
+    }
+
     function handleSubmit(event) {
-        addRestaurant(restaurantInfo);
+        updateRestaurants();
         console.log(restaurantInfo);
         setRestaurantInfo({
             name: "",
             address: {},
-            zones: [],
-            administrator: {}
-            
+            zones: []
         })
         setAddressState({
             street: "",

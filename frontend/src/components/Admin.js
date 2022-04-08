@@ -11,7 +11,7 @@ function Admin() {
             <Route path="/" element={<AdminHome/>}>
                 <Route path="addRestaurant" element={<AddRestaurant/>}></Route>
                 <Route path="addFood" element={<AddFood/>}></Route>
-                <Route path="viewMenu" element={<ViewMenu user={localStorage.getItem("user")}/>}></Route>
+                <Route path="viewMenu" element={<ViewMenu/>}></Route>
             </Route>
         </Routes>
     );

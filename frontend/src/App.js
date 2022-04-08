@@ -6,13 +6,16 @@ import Login from "./components/Login";
 //import {loginUser, user} from "./components/Login";
 import Register from "./components/Register";
 import Admin from "./components/Admin";
-//
+import Customer from "./components/Customer";
+
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/admin/*" element={<Admin/>}/>
+        <Route path="/customer/register" element={<Register/>}/>
+        <Route path="/customer/*" element={<Customer/>}/>
         <Route path="/" element={<Home/>}>
           <Route path="login" element={<Login/>}/>
           <Route path="customer/register" element={<Register/>}/>

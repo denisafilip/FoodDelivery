@@ -18,8 +18,8 @@ function Login() {
         return email.length > 0 && password.length > 0;
     }
 
-    function loginUser(credentials) {
-        axios
+    const loginUser = async(credentials) => {
+        await axios
           .post("http://localhost:8080/login", credentials)
           .then((response) => {
               console.info(response.data);
@@ -28,17 +28,18 @@ function Login() {
           .catch((error) => console.error("There was an error!", error));
     }    
 
-    function handleSubmit(event) {
-        loginUser({email, password});
+    const doLogin = async() => {
+        await loginUser({email, password});
         const loggedInUser = localStorage.getItem("user");
         console.log(loggedInUser)
         if (loggedInUser) {
             setEmail("");
             setPassword("");
             const foundUser = JSON.parse(loggedInUser);
+            console.log(foundUser.restaurant);
             if (foundUser.hasOwnProperty('restaurant') && foundUser.restaurant == null) {
                 navigate("/admin/addRestaurant");
-            } else if (foundUser.hasOwnProperty('restaurant')) {
+            } else if (foundUser.hasOwnProperty('restaurant') && foundUser.restaurant != null) {
                 navigate('/admin')
             } else {
                 navigate("/customer");
@@ -46,6 +47,10 @@ function Login() {
         } else {
             console.log("here without user");
         } 
+    }
+
+    function handleSubmit(event) {
+        doLogin();   
         event.preventDefault();
     }
 

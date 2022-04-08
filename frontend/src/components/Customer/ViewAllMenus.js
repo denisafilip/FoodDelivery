@@ -1,27 +1,46 @@
 import React, { useState, useEffect } from "react";
-import {Card, Table} from "react-bootstrap";
+import {Card, Table, Button} from "react-bootstrap";
 import "../../css/FormStyle.css";
 
-function ViewMenu() {
-    const [foods, setFoods] = useState(JSON.parse(localStorage.getItem("user")).restaurant.foods);
+function ViewAllMenus() {
+    const [restaurants, setRestaurants] = useState(JSON.parse(localStorage.getItem("restaurants")));
+    const [currentRestaurant, setCurrentRestaurant] = useState(restaurants[0]);
     const [foodCategories, setFoodCategories] = useState(JSON.parse(localStorage.getItem("foodCategories")));
 
     useEffect(() => {
         window.addEventListener('storage', () => {
-            setFoods(JSON.parse(localStorage.getItem("user")).restaurant.foods || [])   
+            setRestaurants(JSON.parse(localStorage.getItem("restaurants")) || [])   
             window.location.reload();
           });
-        console.log(foods);
-        console.log(localStorage.getItem("user"))
+        console.log(localStorage.getItem("restaurants"))
     }, []);
 
+    function handleChange(event) {
+        restaurants.forEach(restaurant => {
+            if (restaurant.name == event.target.value) {
+                setCurrentRestaurant(restaurant);
+            }
+        })
+    }
+
+    function handleClick(event) {
+
+    }
+
     return (
-        <div className="TableStyle">
+        <div key="initial" className="TableStyle1">
         
             <br/>
             <br/>
 
-            <div>
+            <div key="first">
+                <div key="second">
+                    <select className="select-container" key={currentRestaurant.idRestaurant} value={currentRestaurant.name} onChange={handleChange}>
+                        {restaurants?.map(restaurant =>
+                            <option value={restaurant.name} key={restaurant.idRestaurant}>{restaurant.name}</option>
+                        )}
+                    </select>
+                </div>
                 {foodCategories?.map(category => {
                     return (
                         <div key={category.name}>
@@ -35,10 +54,11 @@ function ViewMenu() {
                                     <th>Food Name</th>
                                     <th>Description</th>
                                     <th>Price</th>
+                                    <th>Add to cart</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {foods?.map(food => {
+                                    {currentRestaurant.foods?.map(food => {
                                         if (food.category.name == category.name) {
                                             return (
                                                 <tr key={food.name}>
@@ -46,6 +66,7 @@ function ViewMenu() {
                                                     <td key={food.name}>{food.name}</td>
                                                     <td key={food.description}>{food.description}</td>
                                                     <td key={food.price}>{food.price}</td>
+                                                    <td key={"button" + food.idFood}><Button onClick={handleClick}>Add</Button></td>
                                                 </tr>
                                             );
                                         }
@@ -62,4 +83,4 @@ function ViewMenu() {
     );
 }
 
-export default ViewMenu;
+export default ViewAllMenus;
