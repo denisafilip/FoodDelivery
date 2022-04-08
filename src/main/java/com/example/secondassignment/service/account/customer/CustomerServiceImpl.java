@@ -5,6 +5,7 @@ import com.example.secondassignment.model.mappers.CustomerMapper;
 import com.example.secondassignment.model.Address;
 import com.example.secondassignment.model.Customer;
 import com.example.secondassignment.repository.CustomerRepository;
+import com.example.secondassignment.service.account.exceptions.DuplicateEmailException;
 import com.example.secondassignment.service.address.AddressService;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
 import com.example.secondassignment.service.validators.NameValidator;
@@ -60,20 +61,21 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDTO register(CustomerDTO customerDTO) throws DuplicateName, InvalidDataException {
+    public CustomerDTO register(CustomerDTO customerDTO) throws InvalidDataException, DuplicateEmailException {
         String validationMsg = validateCustomer(customerDTO.getFirstName(), customerDTO.getLastName(),
                 customerDTO.getEmail(), customerDTO.getPassword());
         if (validationMsg != null) {
-            throw new InvalidDataException("The details of the customer are incorrect!");
+            throw new InvalidDataException(validationMsg);
         }
         Address address = addressService.save(customerDTO.getAddress());
 
         Optional<Customer> _customer = customerRepository.findByEmail(customerDTO.getEmail());
         if (_customer.isPresent()) {
-            throw new DuplicateName("A customer with that email already exists!");
+            throw new DuplicateEmailException("A customer with that email already exists!");
         }
 
         customerDTO.setAddress(address);
+
         Customer c = CustomerMapper.getInstance().convertFromDTO(customerDTO);
         customerRepository.save(c);
         return CustomerMapper.getInstance().convertToDTO(c);

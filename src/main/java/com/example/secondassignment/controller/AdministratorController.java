@@ -52,7 +52,6 @@ public class AdministratorController {
     @GetMapping("/get")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public AdministratorDTO getCurrentAdministrator(@Param("adminEmail") String adminEmail) {
-        System.out.println(adminEmail);
         return AdministratorMapper.getInstance().convertToDTO(administratorService.findByEmail(adminEmail));
     }
 

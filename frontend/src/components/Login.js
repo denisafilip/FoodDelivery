@@ -7,6 +7,7 @@ import axios from "axios";
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
 
     const navigate = useNavigate();
 
@@ -24,29 +25,25 @@ function Login() {
           .then((response) => {
               console.info(response.data);
               localStorage.setItem('user', JSON.stringify(response.data));
-          })
-          .catch((error) => console.error("There was an error!", error));
-    }    
 
-    const doLogin = async() => {
-        await loginUser({email, password});
-        const loggedInUser = localStorage.getItem("user");
-        console.log(loggedInUser)
-        if (loggedInUser) {
-            setEmail("");
-            setPassword("");
-            const foundUser = JSON.parse(loggedInUser);
-            console.log(foundUser.restaurant);
-            if (foundUser.hasOwnProperty('restaurant') && foundUser.restaurant == null) {
+            if (response.data.hasOwnProperty('restaurant') && response.data.restaurant == null) {
                 navigate("/admin/addRestaurant");
-            } else if (foundUser.hasOwnProperty('restaurant') && foundUser.restaurant != null) {
+            } else if (response.data.hasOwnProperty('restaurant') && response.data.restaurant != null) {
                 navigate('/admin')
             } else {
                 navigate("/customer");
             }
-        } else {
-            console.log("here without user");
-        } 
+          })
+          .catch((error) => {
+              //alert(error.message);
+              setError(error.response.data.message);
+              localStorage.removeItem("user");
+              console.error("There was an error!", error.response.data.message)
+          });
+    }    
+
+    const doLogin = async() => {
+        await loginUser({email, password});
     }
 
     function handleSubmit(event) {
@@ -74,6 +71,11 @@ function Login() {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </Form.Group>
+                <br/>
+                <text style={{color: 'red', justifyContent: 'center', display: 'flex'}}>
+                    {error}
+                </text>
+
                 <Button variant="primary" block size="lg" type="submit" disabled={!validateForm()}>
                     Login
                 </Button>

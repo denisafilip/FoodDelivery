@@ -3,6 +3,7 @@ package com.example.secondassignment.service.account.customer;
 
 import com.example.secondassignment.model.DTO.CustomerDTO;
 import com.example.secondassignment.model.Customer;
+import com.example.secondassignment.service.account.exceptions.DuplicateEmailException;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
 import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
 
@@ -17,5 +18,5 @@ public interface CustomerService {
 
     CustomerDTO findByEmail(String email);
 
-    CustomerDTO register(CustomerDTO customerDTO) throws DuplicateName, InvalidDataException;
+    CustomerDTO register(CustomerDTO customerDTO) throws DuplicateName, InvalidDataException, DuplicateEmailException;
 }

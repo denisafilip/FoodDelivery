@@ -17,11 +17,6 @@ public class AccountController {
 
     @PostMapping("")
     public ResponseEntity<AccountDTO> login(@RequestBody(required = false) LoginDTO loginDTO) {
-        try {
-            return new ResponseEntity<>(accountService.logIn(loginDTO), HttpStatus.CREATED);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+        return new ResponseEntity<>(accountService.logIn(loginDTO), HttpStatus.CREATED);
     }
 }

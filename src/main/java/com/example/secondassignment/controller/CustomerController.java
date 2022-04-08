@@ -5,7 +5,9 @@ import com.example.secondassignment.model.DTO.RestaurantDTO;
 import com.example.secondassignment.model.Restaurant;
 import com.example.secondassignment.model.Zone;
 import com.example.secondassignment.service.account.customer.CustomerServiceImpl;
+import com.example.secondassignment.service.account.exceptions.DuplicateEmailException;
 import com.example.secondassignment.service.address.zone.ZoneServiceImpl;
+import com.example.secondassignment.service.exceptions.InvalidDataException;
 import com.example.secondassignment.service.restaurant.RestaurantServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,13 +30,9 @@ public class CustomerController {
     private RestaurantServiceImpl restaurantService;
 
     @PostMapping("/register")
-    public ResponseEntity<CustomerDTO> registerCustomer(@RequestBody(required = false) CustomerDTO customerDTO) {
-        try {
-            return new ResponseEntity<>(customerService.register(customerDTO), HttpStatus.CREATED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<CustomerDTO> registerCustomer(@RequestBody(required = false) CustomerDTO customerDTO)
+            throws InvalidDataException, DuplicateEmailException {
+        return new ResponseEntity<>(customerService.register(customerDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("/register")

@@ -10,11 +10,11 @@ import com.example.secondassignment.model.Administrator;
 import com.example.secondassignment.model.Customer;
 import com.example.secondassignment.repository.AdministratorRepository;
 import com.example.secondassignment.repository.CustomerRepository;
+import com.example.secondassignment.service.account.exceptions.NoSuchAccountException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -37,29 +37,20 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDTO getAccountDTO(LoginDTO loginDTO) {
+    public AccountDTO getAccountDTO(LoginDTO loginDTO) throws NoSuchAccountException {
         AccountDTO accountDTO = this.findByEmail(loginDTO.getEmail());
         if (accountDTO == null) {
-            throw new NoSuchElementException("No account with this email was found.");
+            throw new NoSuchAccountException("No account with this email was found.");
         }
         Account account = AccountMapper.getInstance().convertFromDTO(accountDTO);
 
         if (BCrypt.checkpw(loginDTO.getPassword(), account.getPassword())) {
             return accountDTO;
         }
-        throw new NoSuchElementException("No account with this email and password was found.");
+        throw new NoSuchAccountException("The password for this email is incorrect!");
     }
 
-    public AccountDTO logIn(LoginDTO loginDTO) {
-        /*AccountDTO accountDTO = this.getAccountDTO(loginDTO);
-        Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("account", accountDTO);
-        boolean gotAdmin = false;
-        if (accountDTO instanceof AdministratorDTO) {
-            gotAdmin = true;
-        }
-        responseMap.put("admin", gotAdmin);
-        return responseMap;*/
+    public AccountDTO logIn(LoginDTO loginDTO) throws NoSuchAccountException {
         return this.getAccountDTO(loginDTO);
     }
 
