@@ -5,11 +5,12 @@ import "../css/FormStyle.css";
 import axios from "axios";
 
 function Register() {
+    const [zones, setZones] = useState(JSON.parse(localStorage.getItem("zones")));
     const [addressState, setAddressState] = useState({
         street: "",
         number: "",
         city: "",
-        zone: {},
+        zone: zones[0],
         country: "",
         postalCode: ""
     })
@@ -23,22 +24,13 @@ function Register() {
             street: "",
             number: "",
             city: "",
-            zone: {
-                idZone: 0,
-                name: ""
-            },
+            zone: zones[0],
             country: "",
             postalCode: ""
         },
     });
-    const [zones, setZones] = useState([]);
-
-    //canot read map?
-    useEffect(() => {
-        fetch('http://localhost:8080/customer/register')
-          .then(response => response.json())
-          .then(setZones);
-        }, []);
+    
+    const [error, setError] = useState("");
 
     const navigate = useNavigate();
 
@@ -47,13 +39,16 @@ function Register() {
     }
 
     function validateForm() {
-        return userInfo.email.length > 0 && userInfo.password.length > 0 && userInfo.confirmPassword != userInfo.password;
+        return userInfo.email.length > 0 && userInfo.password.length > 0 && 
+            userInfo.firstName.length > 0 && userInfo.lastName.length > 0 &&
+            userInfo.address.street > 0 && userInfo.address.country > 0 &&
+            userInfo.address.number > 0 && userInfo.address.postalCode > 0 &&
+            userInfo.address.city > 0 && userInfo.confirmPassword == userInfo.password;
     }
 
     function handleChange(event) {
         // get name and value properties from event target
         const {name, value} = event.target
-        console.log(value)
         setUserInfo(prevState => {
             // update your 'list' property
             return {
@@ -106,17 +101,23 @@ function Register() {
         console.log(userInfo);
     }
 
-    function registerCustomer(userInfo) {
-        axios
+    const registerCustomer = async(userInfo) => {
+        await axios
           .post("http://localhost:8080/customer/register", userInfo)
-          .then((response) => console.info(response))
-          .catch((error) => console.error("There was an error!", error));
+          .then((response) => {
+              console.info(response);
+              goToLogIn();
+          })
+          .catch((error) => {
+            setError(error.response.data.message);
+            console.error("There was an error!", error.response.data.message)
+          });
     }
 
     function handleSubmit(event) {
         registerCustomer(userInfo);
         console.log(userInfo);
-        setUserInfo({
+        /*setUserInfo({
             firstName: "",
             lastName: "",
             email: "",
@@ -132,8 +133,8 @@ function Register() {
             zone: {},
             country: "",
             postalCode: ""
-        })
-        navigate("/login");
+        })*/
+        
         event.preventDefault();
     }
 
@@ -192,7 +193,7 @@ function Register() {
                     <Form.Control name="postalCode" type="text" value={addressState.postalCode} onChange={handleChangeAddress}/>
                 </Form.Group>
 
-                <div className="select-container">
+                <div>
                     <select value={addressState.zone.idZone} onChange={handleSelect}>
                         {zones.map(zone =>
                             <option value={zone.idZone} key={zone.idZone}>{zone.name}</option>
@@ -200,7 +201,13 @@ function Register() {
                     </select>
                 </div>
 
-                <Button variant="primary" block size="lg" type="submit" /*disabled={!validateForm()}*/>
+                <br/>
+
+                <text style={{color: 'red', justifyContent: 'center', display: 'flex'}}>
+                    {error}
+                </text>
+
+                <Button variant="primary" block size="lg" type="submit" disabled={!validateForm()}>
                     Register
                 </Button>
                 <Button variant="primary" block size="lg" onClick={goToLogIn}>

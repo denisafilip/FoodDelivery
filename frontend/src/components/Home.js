@@ -2,8 +2,16 @@ import React from 'react';
 import '../css/Home.css';
 import { Container, Nav, Navbar, Card, NavLink } from 'react-bootstrap';
 import {Outlet} from 'react-router-dom';
+import axios from "axios";
  
 export default function Home () {
+
+    axios
+        .get('http://localhost:8080/admin/addRestaurant')
+        .then(response => {
+            localStorage.setItem('zones', JSON.stringify(response.data));
+        });
+
     return (
     <div>
         <Navbar bg="dark" variant="dark">

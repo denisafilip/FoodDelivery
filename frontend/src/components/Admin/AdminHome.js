@@ -11,12 +11,6 @@ export default function AdminHome() {
             localStorage.setItem('foodCategories', JSON.stringify(response.data));
         });
 
-    axios
-        .get('http://localhost:8080/admin/addRestaurant')
-        .then(response => {
-            localStorage.setItem('zones', JSON.stringify(response.data));
-        });
-
     return (
         <div>
             <Navbar bg="dark" variant="dark">
