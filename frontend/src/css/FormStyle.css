@@ -1,5 +1,6 @@
 .FormStyle {
     margin: auto;
+    margin-top: 30px;
     padding: 10px;
     border: 1px solid #c9c9c9;
     border-radius: 5px;
@@ -69,7 +70,7 @@
     display: block;
 }
 
-.TableStyle1 button {
+.TableStyle button {
     margin: 10px 0 0 0;
     padding: 7px 10px;
     border: 1px solid #efffff;

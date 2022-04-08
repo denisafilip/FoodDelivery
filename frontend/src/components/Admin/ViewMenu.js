@@ -45,7 +45,7 @@ function ViewMenu() {
                                                     <td key={food.idFood}>{food.idFood}</td>
                                                     <td key={food.name}>{food.name}</td>
                                                     <td key={food.description}>{food.description}</td>
-                                                    <td key={food.price}>{food.price}</td>
+                                                    <td key={food.price}>{food.price + " RON"}</td>
                                                 </tr>
                                             );
                                         }

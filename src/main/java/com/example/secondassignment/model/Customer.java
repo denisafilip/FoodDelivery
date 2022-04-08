@@ -21,7 +21,7 @@ public class Customer extends Account {
     @JoinColumn(name = "id_address")
     private Address address;
 
-    @JsonManagedReference
+    @JsonManagedReference(value = "order-customer")
     @OneToMany(mappedBy = "customer", orphanRemoval = true)
     private List<Order> orders;
 

@@ -4,6 +4,7 @@ import com.example.secondassignment.model.OrderStatus;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -26,6 +27,6 @@ public class OrderDTO {
     private OrderStatus orderStatus;
 
     @NonNull
-    private Set<FoodDTO> foods;
+    private List<FoodDTO> foods;
 
 }

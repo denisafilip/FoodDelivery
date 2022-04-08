@@ -41,9 +41,9 @@ function Register() {
     function validateForm() {
         return userInfo.email.length > 0 && userInfo.password.length > 0 && 
             userInfo.firstName.length > 0 && userInfo.lastName.length > 0 &&
-            userInfo.address.street > 0 && userInfo.address.country > 0 &&
-            userInfo.address.number > 0 && userInfo.address.postalCode > 0 &&
-            userInfo.address.city > 0 && userInfo.confirmPassword == userInfo.password;
+            userInfo.address.street.length > 0 && userInfo.address.country.length > 0 &&
+            userInfo.address.number.length > 0 && userInfo.address.postalCode.length > 0 &&
+            userInfo.address.city.length > 0 && userInfo.confirmPassword == userInfo.password;
     }
 
     function handleChange(event) {

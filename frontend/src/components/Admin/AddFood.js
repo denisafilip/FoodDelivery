@@ -5,30 +5,15 @@ import axios from "axios";
 import "../../css/FormStyle.css";
 
 function AddFood() {
+    const [foodCategories, setFoodCategories] = useState(JSON.parse(localStorage.getItem("foodCategories")));
+    const [admin, setAdmin] = useState(JSON.parse(localStorage.getItem("user")));
     const [foodInfo, setFoodInfo] = useState({
         name: "",
         price: 0,
         description: "",
-        category: {},
+        category: foodCategories[0],
         restaurantDTO: JSON.parse(localStorage.getItem("user")).restaurant
     });
-    const [foodCategories, setFoodCategories] = useState(JSON.parse(localStorage.getItem("foodCategories")));
-    const [admin, setAdmin] = useState(JSON.parse(localStorage.getItem("user")));
-
-    /*useEffect(() => {
-        const loggedInUser = localStorage.getItem("user");
-        if (loggedInUser) {
-            const foundUser = JSON.parse(loggedInUser);
-            setAdmin(foundUser);
-            setFoodInfo(prevState => {
-                return {
-                  ...prevState,
-                  restaurantDTO: foundUser.restaurant
-                };
-            })
-        }
-      }, []);*/
-
 
     const navigate = useNavigate();
 
@@ -103,7 +88,7 @@ function AddFood() {
             <br/>
             <br/>
 
-            <div className="select-container">
+            <div>
                 <select value={foodInfo.category.idCategory} onChange={handleSelect}>
                     {foodCategories?.map(category =>
                         <option value={category.idCategory} key={category.idCategory}>{category.name}</option>

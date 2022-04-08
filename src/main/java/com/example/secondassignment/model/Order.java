@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -27,13 +28,13 @@ public class Order {
     private LocalDate date;
 
     @NonNull
-    @JsonBackReference
+    @JsonBackReference(value = "order-customer")
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_customer")
     private Customer customer;
 
     @NonNull
-    @JsonBackReference
+    @JsonBackReference(value = "order-restaurant")
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_restaurant")
     private Restaurant restaurant;
@@ -47,5 +48,5 @@ public class Order {
     @JoinTable(name = "food_order",
             joinColumns = @JoinColumn(name = "id_order"),
             inverseJoinColumns = @JoinColumn(name = "id_food"))
-    private Set<Food> foods;
+    private List<Food> foods;
 }

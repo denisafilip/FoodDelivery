@@ -50,11 +50,11 @@ public class Restaurant {
     @ToString.Exclude
     private Administrator administrator;
 
-    @JsonManagedReference
+    @JsonManagedReference(value = "food-restaurant")
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private Set<Food> foods;
 
-    @JsonManagedReference
+    @JsonManagedReference(value = "order-restaurant")
     @OneToMany(mappedBy = "restaurant", orphanRemoval = true)
     private List<Order> orders;
 }

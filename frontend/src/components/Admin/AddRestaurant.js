@@ -5,11 +5,12 @@ import axios from "axios";
 import "../../css/FormStyle.css";
 
 function AddRestaurant() {
+    const [zones, setZones] = useState(JSON.parse(localStorage.getItem("zones")));
     const [addressState, setAddressState] = useState({
         street: "",
         number: "",
         city: "",
-        zone: {},
+        zone: zones[0],
         country: "",
         postalCode: ""
     })
@@ -19,30 +20,13 @@ function AddRestaurant() {
             street: "",
             number: "",
             city: "",
-            zone: {
-                idZone: 0,
-                name: ""
-            },
+            zone: zones[0],
             country: "",
             postalCode: ""
         },
         deliveryZones: [],
         administratorDTO: useState(JSON.parse(localStorage.getItem("zones")))
     });
-    const [zones, setZones] = useState(JSON.parse(localStorage.getItem("zones")));
-
-    /*useEffect(() => {
-        const loggedInUser = localStorage.getItem("user");
-        if (loggedInUser) {
-            const foundUser = JSON.parse(loggedInUser);
-            setRestaurantInfo(prevState => {
-                return {
-                    ...prevState,
-                    administratorDTO: foundUser
-                };
-            })
-        }
-      }, []);*/
 
     const navigate = useNavigate();
 

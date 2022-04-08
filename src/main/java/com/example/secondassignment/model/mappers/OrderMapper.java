@@ -33,7 +33,7 @@ public class OrderMapper implements Mapper<Order, OrderDTO> {
                 .customer(CustomerMapper.getInstance().convertToDTO(order.getCustomer()))
                 .foods(order.getFoods().stream()
                         .map(FoodMapper.getInstance()::convertToDTO)
-                        .collect(Collectors.toSet()))
+                        .collect(Collectors.toList()))
                 .restaurant(RestaurantMapper.getInstance().convertToDTO(order.getRestaurant()))
                 .build();
     }

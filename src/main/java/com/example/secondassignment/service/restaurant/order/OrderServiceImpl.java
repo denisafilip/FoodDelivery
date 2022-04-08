@@ -12,6 +12,7 @@ import com.example.secondassignment.service.restaurant.food.FoodServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -44,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
             throw new InvalidDataException("No suitable restaurant was found when placing the order.");
         }
 
-        Set<Food> foods = new HashSet<>();
+        List<Food> foods = new ArrayList<>();
         for (FoodDTO foodDTO : orderDTO.getFoods()) {
             Food food = foodService.findByNameAndRestaurant(foodDTO.getName(), restaurant);
             if (food != null) {
@@ -56,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
                 .customer(customer)
                 .restaurant(restaurant)
                 .foods(foods)
-                .date(orderDTO.getDate())
+                .date(LocalDate.now())
                 .status(OrderStatus.PENDING)
                 .build();
         Order savedOrder = orderRepository.save(order);
