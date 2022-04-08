@@ -1,6 +1,8 @@
 package com.example.secondassignment.controller;
 
 import com.example.secondassignment.model.DTO.CustomerDTO;
+import com.example.secondassignment.model.DTO.FoodDTO;
+import com.example.secondassignment.model.DTO.OrderDTO;
 import com.example.secondassignment.model.DTO.RestaurantDTO;
 import com.example.secondassignment.model.Restaurant;
 import com.example.secondassignment.model.Zone;
@@ -54,4 +56,15 @@ public class CustomerController {
             return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
         }
     }
+
+    @GetMapping("/addToCart")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<List<OrderDTO>> addFoodToCart(FoodDTO foodDTO) {
+        try {
+            return new ResponseEntity<>(restaurantService.findAll(), HttpStatus.ACCEPTED);
+        } catch (Exception exception) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
 }

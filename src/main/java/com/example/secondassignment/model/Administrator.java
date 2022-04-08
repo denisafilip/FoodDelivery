@@ -15,7 +15,6 @@ import javax.persistence.*;
 public class Administrator extends Account {
 
     @OneToOne(mappedBy = "administrator", cascade = CascadeType.ALL, orphanRemoval = true)
-    //@JsonIgnore
     @ToString.Exclude
     private Restaurant restaurant;
 

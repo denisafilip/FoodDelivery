@@ -23,7 +23,7 @@ function ViewAllMenus() {
         })
     }
 
-    function handleClick(event) {
+    function addToCart(food) {
 
     }
 
@@ -66,7 +66,7 @@ function ViewAllMenus() {
                                                     <td key={food.name}>{food.name}</td>
                                                     <td key={food.description}>{food.description}</td>
                                                     <td key={food.price}>{food.price}</td>
-                                                    <td key={"button" + food.idFood}><Button onClick={handleClick}>Add</Button></td>
+                                                    <td key={"button" + food.idFood}><Button onClick={() => addToCart(food)}>Add</Button></td>
                                                 </tr>
                                             );
                                         }

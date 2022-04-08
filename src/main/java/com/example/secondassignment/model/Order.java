@@ -1,5 +1,6 @@
 package com.example.secondassignment.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Table(name = "delivery_order")
@@ -23,17 +25,18 @@ public class Order {
     private LocalDate date;
 
     @NonNull
-    @ManyToOne(cascade = CascadeType.ALL)
+    @JsonBackReference
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_customer")
     private Customer customer;
 
     @NonNull
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_restaurant")
     private Restaurant restaurant;
 
     @NonNull
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_status")
     private OrderStatus orderStatus;
 

@@ -44,7 +44,6 @@ public class Food {
     private Category category;
 
     @NonNull
-    //@JsonIgnore
     @JsonBackReference
     @ToString.Exclude
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)

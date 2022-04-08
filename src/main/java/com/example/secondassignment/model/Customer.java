@@ -1,6 +1,7 @@
 package com.example.secondassignment.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -20,8 +21,7 @@ public class Customer extends Account {
     @JoinColumn(name = "id_address")
     private Address address;
 
-    @ToString.Exclude
-    @JsonIgnore
+    @JsonManagedReference
     @OneToMany(mappedBy = "customer", orphanRemoval = true)
     private List<Order> orders;
 
