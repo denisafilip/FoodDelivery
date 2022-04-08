@@ -20,10 +20,7 @@ public class AdministratorMapper implements Mapper<Administrator, AdministratorD
 
     @Override
     public Administrator convertFromDTO(AdministratorDTO administratorDTO) {
-        //System.out.println(administratorDTO);
-        //return administratorService.findByEmail(administratorDTO.getEmail());
         return null;
-        //return admin.orElse(null);
     }
 
     @Override

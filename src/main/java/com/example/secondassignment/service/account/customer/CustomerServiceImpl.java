@@ -54,10 +54,10 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public CustomerDTO findByEmail(String email) {
+    public Customer findByEmail(String email) {
         Optional<Customer> customer = customerRepository.findByEmail(email);
 
-        return customer.map(value -> CustomerMapper.getInstance().convertToDTO(value)).orElse(null);
+        return customer.orElse(null);
     }
 
     @Override

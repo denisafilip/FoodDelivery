@@ -1,30 +1,31 @@
 package com.example.secondassignment.model.DTO;
 
-import com.example.secondassignment.model.Customer;
-import com.example.secondassignment.model.Food;
 import com.example.secondassignment.model.OrderStatus;
-import com.example.secondassignment.model.Restaurant;
-import lombok.NonNull;
+import lombok.*;
 
-import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class OrderDTO {
 
     @NonNull
     private LocalDate date;
 
     @NonNull
-    private Customer customer;
+    private CustomerDTO customer;
 
     @NonNull
-    private Restaurant restaurant;
+    private RestaurantDTO restaurant;
 
     @NonNull
     private OrderStatus orderStatus;
 
     @NonNull
-    private List<Food> foods;
+    private Set<FoodDTO> foods;
 
 }

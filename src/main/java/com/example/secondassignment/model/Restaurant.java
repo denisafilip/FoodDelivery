@@ -54,8 +54,7 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private Set<Food> foods;
 
-    @JsonIgnore
-    @ToString.Exclude
+    @JsonManagedReference
     @OneToMany(mappedBy = "restaurant", orphanRemoval = true)
     private List<Order> orders;
 }

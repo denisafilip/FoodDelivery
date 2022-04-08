@@ -53,7 +53,6 @@ public class FoodServiceImpl implements FoodService {
         }
 
         Optional<List<Food>> foods = foodRepository.findByRestaurant(restaurant);
-        System.out.println(foods);
 
         return foods.map(foodList -> foodList.stream()
                 .map(FoodMapper.getInstance()::convertToDTO)

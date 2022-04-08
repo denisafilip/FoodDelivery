@@ -1,0 +1,114 @@
+package com.example.secondassignment.service.restaurant.order;
+
+import com.example.secondassignment.model.*;
+import com.example.secondassignment.model.DTO.*;
+import com.example.secondassignment.model.mappers.OrderMapper;
+import com.example.secondassignment.repository.OrderRepository;
+import com.example.secondassignment.service.account.customer.CustomerServiceImpl;
+import com.example.secondassignment.service.exceptions.InvalidDataException;
+import com.example.secondassignment.service.restaurant.RestaurantServiceImpl;
+import com.example.secondassignment.service.restaurant.exceptions.DuplicateRestaurantNameException;
+import com.example.secondassignment.service.restaurant.food.FoodServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Service
+public class OrderServiceImpl implements OrderService {
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private CustomerServiceImpl customerService;
+
+    @Autowired
+    private RestaurantServiceImpl restaurantService;
+
+    @Autowired
+    private FoodServiceImpl foodService;
+
+    @Override
+    public OrderDTO save(OrderDTO orderDTO) throws InvalidDataException {
+        Customer customer = customerService.findByEmail(orderDTO.getCustomer().getEmail());
+
+        if (customer == null) {
+            throw new InvalidDataException("No suitable customer was found when placing the order.");
+        }
+
+        Restaurant restaurant = restaurantService.findByName(orderDTO.getRestaurant().getName());
+
+        if (restaurant == null) {
+            throw new InvalidDataException("No suitable restaurant was found when placing the order.");
+        }
+
+        Set<Food> foods = new HashSet<>();
+        for (FoodDTO foodDTO : orderDTO.getFoods()) {
+            Food food = foodService.findByNameAndRestaurant(foodDTO.getName(), restaurant);
+            if (food != null) {
+                foods.add(food);
+            }
+        }
+
+        Order order = Order.builder()
+                .customer(customer)
+                .restaurant(restaurant)
+                .foods(foods)
+                .date(orderDTO.getDate())
+                .status(OrderStatus.PENDING)
+                .build();
+        Order savedOrder = orderRepository.save(order);
+        return OrderMapper.getInstance().convertToDTO(savedOrder);
+    }
+
+    @Override
+    public List<OrderDTO> findAll() {
+        return orderRepository.findAll().stream()
+                .map(OrderMapper.getInstance()::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderDTO> findAllByStatus(OrderStatus status) {
+        Optional<List<Order>> orders = orderRepository.findAllByStatus(status);
+
+        return orders.map(ordersList -> ordersList.stream()
+                .map(OrderMapper.getInstance()::convertToDTO)
+                .collect(Collectors.toList())).orElseGet(ArrayList::new);
+    }
+
+    @Override
+    public List<OrderDTO> findAllByCustomer(CustomerDTO customerDTO) {
+        Customer customer = customerService.findByEmail(customerDTO.getEmail());
+
+        Optional<List<Order>> orders = orderRepository.findAllByCustomer(customer);
+
+        return orders.map(ordersList -> ordersList.stream()
+                .map(OrderMapper.getInstance()::convertToDTO)
+                .collect(Collectors.toList())).orElseGet(ArrayList::new);
+    }
+
+    @Override
+    public List<OrderDTO> findAllByRestaurant(RestaurantDTO restaurantDTO) {
+        Restaurant restaurant = restaurantService.findByName(restaurantDTO.getName());
+
+        Optional<List<Order>> orders = orderRepository.findAllByRestaurant(restaurant);
+
+        return orders.map(ordersList -> ordersList.stream()
+                .map(OrderMapper.getInstance()::convertToDTO)
+                .collect(Collectors.toList())).orElseGet(ArrayList::new);
+    }
+
+    @Override
+    public List<OrderDTO> findAllByRestaurantAndStatus(RestaurantDTO restaurantDTO, OrderStatus status) {
+        Restaurant restaurant = restaurantService.findByName(restaurantDTO.getName());
+
+        Optional<List<Order>> orders = orderRepository.findAllByRestaurantAndStatus(restaurant, status);
+
+        return orders.map(ordersList -> ordersList.stream()
+                .map(OrderMapper.getInstance()::convertToDTO)
+                .collect(Collectors.toList())).orElseGet(ArrayList::new);
+    }
+}

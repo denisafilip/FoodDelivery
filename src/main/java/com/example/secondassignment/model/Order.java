@@ -5,12 +5,14 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @ToString
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @RequiredArgsConstructor
 @Table(name = "delivery_order")
@@ -31,22 +33,19 @@ public class Order {
     private Customer customer;
 
     @NonNull
+    @JsonBackReference
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_restaurant")
     private Restaurant restaurant;
 
     @NonNull
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "id_status")
-    private OrderStatus orderStatus;
+    @Column(name = "status")
+    private OrderStatus status;
 
     @NonNull
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "food_order",
             joinColumns = @JoinColumn(name = "id_order"),
             inverseJoinColumns = @JoinColumn(name = "id_food"))
-    private List<Food> foods;
-
-
-
+    private Set<Food> foods;
 }

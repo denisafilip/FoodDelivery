@@ -16,7 +16,7 @@ public interface CustomerService {
 
     List<CustomerDTO> findAll();
 
-    CustomerDTO findByEmail(String email);
+    Customer findByEmail(String email);
 
     CustomerDTO register(CustomerDTO customerDTO) throws DuplicateName, InvalidDataException, DuplicateEmailException;
 }

@@ -11,6 +11,7 @@ import com.example.secondassignment.service.account.exceptions.DuplicateEmailExc
 import com.example.secondassignment.service.address.zone.ZoneServiceImpl;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
 import com.example.secondassignment.service.restaurant.RestaurantServiceImpl;
+import com.example.secondassignment.service.restaurant.order.OrderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,9 @@ public class CustomerController {
 
     @Autowired
     private CustomerServiceImpl customerService;
+
+    @Autowired
+    private OrderServiceImpl orderService;
 
     @Autowired
     private ZoneServiceImpl zoneService;
@@ -57,11 +61,10 @@ public class CustomerController {
         }
     }
 
-    @GetMapping("/addToCart")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<List<OrderDTO>> addFoodToCart(FoodDTO foodDTO) {
+    @PostMapping("/viewMenu")
+    public ResponseEntity<OrderDTO> placeOrder(OrderDTO orderDTO) {
         try {
-            return new ResponseEntity<>(restaurantService.findAll(), HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(orderService.save(orderDTO), HttpStatus.ACCEPTED);
         } catch (Exception exception) {
             return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
         }
