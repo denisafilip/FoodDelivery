@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {Form, Button, Card} from "react-bootstrap";
+import {Form, Button, Card, Alert} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../css/FormStyle.css";
@@ -14,8 +14,13 @@ function AddFood() {
         category: foodCategories[0],
         restaurantDTO: JSON.parse(localStorage.getItem("user")).restaurant
     });
+    const [error, setError] = useState("");
 
     const navigate = useNavigate();
+
+    function validateForm() {
+        return foodInfo.name.length > 0 && foodInfo.price > 0 && foodInfo.description.length > 0;
+    }
 
     function handleChange(event) {
         const {name, value} = event.target
@@ -46,8 +51,21 @@ function AddFood() {
     const addFood = async() => {
         await axios
           .post("http://localhost:8080/admin/addFood", foodInfo)
-          .then((response) => console.info(response))
-          .catch((error) => console.error("There was an error when adding food!", error));
+          .then((response) => {
+                alert("You added a " + foodInfo.name + " under the category " + foodInfo.category.name + "!");
+                setFoodInfo({
+                    name: "",
+                    price: 0,
+                    description: "",
+                    category: {},
+                    restaurantDTO: JSON.parse(localStorage.getItem("user")).restaurant
+                })
+              console.info(response)
+          })
+          .catch((error) => {
+                setError(error.response.data.message);
+                console.error("There was an error!", error.response.data.message)
+          });
     }
 
     const updateState = async() => {
@@ -62,20 +80,13 @@ function AddFood() {
           .then((response) => {
                 localStorage.setItem('user', JSON.stringify(response.data));
                 console.log(response.data);
+                navigate("/admin/addFood");
           })
           .catch((error) => console.error("There was an error when adding food!", error));
     }
 
     function handleSubmit(event) {
         updateState();
-        setFoodInfo({
-            name: "",
-            price: 0,
-            description: "",
-            category: {},
-            restaurantDTO: JSON.parse(localStorage.getItem("user")).restaurant
-        })
-        navigate("/admin/addFood");
         event.preventDefault();
     }
 
@@ -115,7 +126,12 @@ function AddFood() {
                         <Form.Control autoFocus name="description" type="text" value={foodInfo.description} onChange={handleChange} />
                 </Form.Group>
 
-                <Button variant="primary" block size="lg" type="submit">
+                <br/>
+                <text style={{color: 'red', justifyContent: 'center', display: 'flex'}}>
+                    {error}
+                </text>
+
+                <Button variant="primary" block size="lg" type="submit" disabled={!validateForm()}>
                     Add Food
                 </Button>
             </Form>
