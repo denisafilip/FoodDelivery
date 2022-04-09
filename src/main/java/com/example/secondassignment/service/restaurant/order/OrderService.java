@@ -4,8 +4,10 @@ import com.example.secondassignment.model.DTO.CustomerDTO;
 import com.example.secondassignment.model.DTO.OrderDTO;
 import com.example.secondassignment.model.DTO.RestaurantDTO;
 import com.example.secondassignment.model.OrderStatus;
+import com.example.secondassignment.service.account.exceptions.NoSuchAccountException;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
 import com.example.secondassignment.service.restaurant.exceptions.DuplicateRestaurantNameException;
+import com.example.secondassignment.service.restaurant.exceptions.NoSuchRestaurantException;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -24,4 +26,8 @@ public interface OrderService {
     List<OrderDTO> findAllByRestaurant(RestaurantDTO restaurantDTO);
 
     List<OrderDTO> findAllByRestaurantAndStatus(RestaurantDTO restaurantDTO, OrderStatus status);
+
+    List<OrderDTO> findAllByRestaurantName(String restaurantName) throws NoSuchRestaurantException;
+
+    List<OrderDTO> findAllByCustomerEmail(String customerEmail) throws NoSuchAccountException;
 }

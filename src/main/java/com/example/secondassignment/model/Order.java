@@ -1,6 +1,7 @@
 package com.example.secondassignment.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,18 +29,19 @@ public class Order {
     private LocalDate date;
 
     @NonNull
-    @JsonBackReference(value = "order-customer")
+    @JsonManagedReference(value = "order-customer")
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_customer")
     private Customer customer;
 
     @NonNull
-    @JsonBackReference(value = "order-restaurant")
+    @JsonManagedReference(value = "order-restaurant")
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_restaurant")
     private Restaurant restaurant;
 
     @NonNull
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private OrderStatus status;
 

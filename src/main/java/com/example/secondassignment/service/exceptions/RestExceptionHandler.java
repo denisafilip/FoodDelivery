@@ -4,6 +4,7 @@ import com.example.secondassignment.service.account.exceptions.DuplicateEmailExc
 import com.example.secondassignment.service.account.exceptions.NoSuchAccountException;
 import com.example.secondassignment.service.restaurant.exceptions.DuplicateFoodNameException;
 import com.example.secondassignment.service.restaurant.exceptions.DuplicateRestaurantNameException;
+import com.example.secondassignment.service.restaurant.exceptions.NoSuchRestaurantException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +53,16 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(NoSuchAccountException.class)
     protected ResponseEntity<ApiError> handleNoSuchAccountException(NoSuchAccountException exception, WebRequest webRequest) {
-        String error = "No account exists exception";
+        String error = "No such account exists exception";
+
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, exception.getLocalizedMessage(), error);
+
+        return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
+    }
+
+    @ExceptionHandler(NoSuchRestaurantException.class)
+    protected ResponseEntity<ApiError> handleNoSuchRestaurantException(NoSuchRestaurantException exception, WebRequest webRequest) {
+        String error = "No such restaurant exists exception";
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST, exception.getLocalizedMessage(), error);
 

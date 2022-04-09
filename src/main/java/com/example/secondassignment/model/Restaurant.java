@@ -1,9 +1,6 @@
 package com.example.secondassignment.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 
 import javax.persistence.*;
@@ -50,11 +47,11 @@ public class Restaurant {
     @ToString.Exclude
     private Administrator administrator;
 
-    @JsonManagedReference(value = "food-restaurant")
+    @JsonBackReference(value = "food-restaurant")
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private Set<Food> foods;
 
-    @JsonManagedReference(value = "order-restaurant")
+    @JsonBackReference(value = "order-restaurant")
     @OneToMany(mappedBy = "restaurant", orphanRemoval = true)
     private List<Order> orders;
 }

@@ -23,7 +23,6 @@ function ViewAllMenus() {
             setRestaurants(JSON.parse(localStorage.getItem("restaurants")) || [])   
             window.location.reload();
           });
-        console.log(localStorage.getItem("restaurants"))
     }, []);
 
     function handleChange(event) {
@@ -76,7 +75,7 @@ function ViewAllMenus() {
 
     const placeOrder = async() => {
         await axios
-        .post("http://localhost:8080/customer/viewMenu", {...order, foods: addedFoods})
+        .post("http://localhost:8080/customer/viewMenu", {...order, restaurant: currentRestaurant, foods: addedFoods})
         .then((response) => {
               alert("You placed an order for the restaurant " + currentRestaurant.name + "!");
               setOrder({

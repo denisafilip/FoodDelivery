@@ -5,6 +5,7 @@ import com.example.secondassignment.model.Food;
 import com.example.secondassignment.model.Restaurant;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
 import com.example.secondassignment.service.restaurant.exceptions.DuplicateFoodNameException;
+import com.example.secondassignment.service.restaurant.exceptions.NoSuchRestaurantException;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -15,5 +16,5 @@ public interface FoodService {
 
     Food findByNameAndRestaurant(String name, Restaurant restaurant);
 
-    List<FoodDTO> findByRestaurant(String restaurantName);
+    List<FoodDTO> findByRestaurant(String restaurantName) throws NoSuchRestaurantException;
 }

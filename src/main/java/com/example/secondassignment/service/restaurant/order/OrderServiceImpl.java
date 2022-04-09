@@ -2,12 +2,15 @@ package com.example.secondassignment.service.restaurant.order;
 
 import com.example.secondassignment.model.*;
 import com.example.secondassignment.model.DTO.*;
+import com.example.secondassignment.model.mappers.FoodMapper;
 import com.example.secondassignment.model.mappers.OrderMapper;
 import com.example.secondassignment.repository.OrderRepository;
 import com.example.secondassignment.service.account.customer.CustomerServiceImpl;
+import com.example.secondassignment.service.account.exceptions.NoSuchAccountException;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
 import com.example.secondassignment.service.restaurant.RestaurantServiceImpl;
 import com.example.secondassignment.service.restaurant.exceptions.DuplicateRestaurantNameException;
+import com.example.secondassignment.service.restaurant.exceptions.NoSuchRestaurantException;
 import com.example.secondassignment.service.restaurant.food.FoodServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -113,6 +116,36 @@ public class OrderServiceImpl implements OrderService {
         Optional<List<Order>> orders = orderRepository.findAllByRestaurantAndStatus(restaurant, status);
 
         return orders.map(ordersList -> ordersList.stream()
+                .map(OrderMapper.getInstance()::convertToDTO)
+                .collect(Collectors.toList())).orElseGet(ArrayList::new);
+    }
+
+    @Override
+    public List<OrderDTO> findAllByRestaurantName(String restaurantName) throws NoSuchRestaurantException {
+        Restaurant restaurant = restaurantService.findByName(restaurantName);
+
+        if (restaurant == null) {
+            throw new NoSuchRestaurantException("No restaurant with the name " + restaurantName + " exists.");
+        }
+
+        Optional<List<Order>> orders = orderRepository.findAllByRestaurant(restaurant);
+
+        return orders.map(orderList -> orderList.stream()
+                .map(OrderMapper.getInstance()::convertToDTO)
+                .collect(Collectors.toList())).orElseGet(ArrayList::new);
+    }
+
+    @Override
+    public List<OrderDTO> findAllByCustomerEmail(String customerEmail) throws NoSuchAccountException {
+        Customer customer = customerService.findByEmail(customerEmail);
+
+        if (customer == null) {
+            throw new NoSuchAccountException("No customer with the email " + customerEmail + " exists.");
+        }
+
+        Optional<List<Order>> orders = orderRepository.findAllByCustomer(customer);
+
+        return orders.map(orderList -> orderList.stream()
                 .map(OrderMapper.getInstance()::convertToDTO)
                 .collect(Collectors.toList())).orElseGet(ArrayList::new);
     }

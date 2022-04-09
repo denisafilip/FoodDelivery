@@ -27,4 +27,7 @@ public class OrderDTO {
     @NonNull
     private List<FoodDTO> foods;
 
+    @NonNull
+    private Integer total;
+
 }

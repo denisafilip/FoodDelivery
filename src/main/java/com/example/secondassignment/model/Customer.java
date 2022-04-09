@@ -1,5 +1,6 @@
 package com.example.secondassignment.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
@@ -23,7 +24,7 @@ public class Customer extends Account {
     @JoinColumn(name = "id_address")
     private Address address;
 
-    @JsonManagedReference(value = "order-customer")
+    @JsonBackReference(value = "order-customer")
     @OneToMany(mappedBy = "customer", orphanRemoval = true)
     private Set<Order> orders;
 

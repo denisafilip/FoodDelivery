@@ -4,6 +4,7 @@ import AdminHome from './Admin/AdminHome';
 import AddRestaurant from './Admin/AddRestaurant';
 import AddFood from './Admin/AddFood';
 import ViewMenu from './Admin/ViewMenu';
+import ViewOrders from "./Admin/ViewOrders";
 
 function Admin() {
     return (
@@ -12,6 +13,7 @@ function Admin() {
                 <Route path="addRestaurant" element={<AddRestaurant/>}></Route>
                 <Route path="addFood" element={<AddFood/>}></Route>
                 <Route path="viewMenu" element={<ViewMenu/>}></Route>
+                <Route path="viewOrders" element={<ViewOrders/>}></Route>
             </Route>
         </Routes>
     );

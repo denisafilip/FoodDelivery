@@ -3,15 +3,15 @@ import {Card, Table} from "react-bootstrap";
 import "../../css/FormStyle.css";
 import axios from "axios";
 
-function ViewOrderHistory() {
-    const [customer, setCustomer] = useState(JSON.parse(localStorage.getItem("user")));
+function ViewOrders() {
+    const [admin, setAdmin] = useState(JSON.parse(localStorage.getItem("user")));
     const [orders, setOrders] = useState();
 
     useEffect(() => {
         axios
-        .get('http://localhost:8080/customer/viewOrderHistory', {
+        .get('http://localhost:8080/admin/viewOrders', {
             params: {
-                customerEmail: customer.email
+                restaurantName: JSON.parse(localStorage.getItem("user")).restaurant.name
             }
         })
         .then(response => {
@@ -23,9 +23,9 @@ function ViewOrderHistory() {
     if (orders?.length == 0) { 
         return (
             <Card className="CardStyle">
-                <Card.Body>You have no orders yet.</Card.Body>
+                <Card.Body>Your restaurant has no orders yet.</Card.Body>
                 <Card.Body>🍇🍇🍇🍇</Card.Body>
-                <Card.Body>Press the <b> View Menu</b> button to start adding food items to your cart.</Card.Body>
+                <Card.Body>Make sure to promote your restaurant to gain popularity amongst the customers.</Card.Body>
             </Card>
         );
     } else {
@@ -38,7 +38,7 @@ function ViewOrderHistory() {
                 <Table striped bordered hover>
                     <thead>
                         <tr>
-                            <th>Restaurant Name</th>
+                            <th>Customer email</th>
                             <th>Ordered foods</th>
                             <th>Status</th>
                             <th>Total Price</th>
@@ -47,9 +47,9 @@ function ViewOrderHistory() {
                     <tbody>
                         {orders?.map(order => {
                             return (
-                                <tr key={order.total}>
-                                    <td>{order.restaurant.name}</td>
-                                    <td>{order.foods?.map(food => { return(food.name + " | "); })}</td>
+                                <tr key={order.idOrder}>
+                                    <td key={order.customer.email}>{order.customer.email}</td>
+                                    <td key={order.idOrder}>{order.foods?.map(food => { return(food.name + " | "); })}</td>
                                     <td key={order.status}>{order.status}</td>
                                     <td key={order.total}>{order.total}</td>
                                 </tr>
@@ -63,4 +63,4 @@ function ViewOrderHistory() {
 
 }
 
-export default ViewOrderHistory;
+export default ViewOrders;

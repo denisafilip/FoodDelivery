@@ -8,6 +8,7 @@ import com.example.secondassignment.service.account.exceptions.DuplicateEmailExc
 import com.example.secondassignment.service.address.zone.ZoneServiceImpl;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
 import com.example.secondassignment.service.restaurant.RestaurantServiceImpl;
+import com.example.secondassignment.service.restaurant.exceptions.NoSuchRestaurantException;
 import com.example.secondassignment.service.restaurant.order.OrderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -58,11 +59,13 @@ public class CustomerController {
     @GetMapping("/viewRestaurants")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<List<RestaurantDTO>> findRestaurants() {
-        try {
-            return new ResponseEntity<>(restaurantService.findAll(), HttpStatus.ACCEPTED);
-        } catch (Exception exception) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
-        }
+        return new ResponseEntity<>(restaurantService.findAll(), HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/viewOrderHistory")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<List<OrderDTO>> getOrders(@Param("customerEmail") String customerEmail) throws NoSuchRestaurantException {
+        return new ResponseEntity<>(orderService.findAllByCustomerEmail(customerEmail), HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/viewMenu")

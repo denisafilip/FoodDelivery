@@ -52,7 +52,7 @@ function AddFood() {
         await axios
           .post("http://localhost:8080/admin/addFood", foodInfo)
           .then((response) => {
-                alert("You added a " + foodInfo.name + " under the category " + foodInfo.category.name + "!");
+                alert("Success! You added the food " + foodInfo.name + "!");
                 setFoodInfo({
                     name: "",
                     price: 0,

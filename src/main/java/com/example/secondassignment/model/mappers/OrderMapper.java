@@ -34,6 +34,7 @@ public class OrderMapper implements Mapper<Order, OrderDTO> {
                         .map(FoodMapper.getInstance()::convertToDTO)
                         .collect(Collectors.toList()))
                 .restaurant(RestaurantMapper.getInstance().convertToDTO(order.getRestaurant()))
+                .total(order.getTotal())
                 .build();
     }
 }

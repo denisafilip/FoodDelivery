@@ -15,13 +15,9 @@ public class CustomerDTO extends AccountDTO {
     @NonNull
     private Address address;
 
-    @NonNull
-    private Set<Order> orders;
-
     @Builder(builderMethodName = "CustomerDTOBuilder")
-    public CustomerDTO(@NonNull String firstName, @NonNull String lastName, @NonNull String email, @NonNull String password, Address address, Set<Order> orders) {
+    public CustomerDTO(@NonNull String firstName, @NonNull String lastName, @NonNull String email, @NonNull String password, Address address) {
         super(firstName, lastName, email, password);
         this.address = address;
-        this.orders = orders;
     }
 }

@@ -8,6 +8,7 @@ import com.example.secondassignment.repository.FoodRepository;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
 import com.example.secondassignment.service.restaurant.RestaurantServiceImpl;
 import com.example.secondassignment.service.restaurant.exceptions.DuplicateFoodNameException;
+import com.example.secondassignment.service.restaurant.exceptions.NoSuchRestaurantException;
 import com.example.secondassignment.service.validators.NameValidator;
 import com.example.secondassignment.service.validators.NumberValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,11 +46,11 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public List<FoodDTO> findByRestaurant(String restaurantName) {
+    public List<FoodDTO> findByRestaurant(String restaurantName) throws NoSuchRestaurantException {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
 
         if (restaurant == null) {
-            throw new NoSuchElementException();
+            throw new NoSuchRestaurantException("No restaurant with the name " + restaurantName + " exists.");
         }
 
         Optional<List<Food>> foods = foodRepository.findByRestaurant(restaurant);
