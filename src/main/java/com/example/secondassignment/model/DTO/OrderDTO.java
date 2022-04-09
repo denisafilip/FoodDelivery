@@ -16,6 +16,8 @@ import java.util.Set;
 @ToString
 public class OrderDTO {
 
+    private Integer idOrder;
+
     @NonNull
     private CustomerDTO customer;
 

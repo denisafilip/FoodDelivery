@@ -6,6 +6,7 @@ import axios from "axios";
 function ViewAllMenus() {
     const [restaurants, setRestaurants] = useState(JSON.parse(localStorage.getItem("restaurants")));
     const [currentRestaurant, setCurrentRestaurant] = useState(restaurants[0]);
+    const [foods, setFoods] = useState([]);
     const [foodCategories, setFoodCategories] = useState(JSON.parse(localStorage.getItem("foodCategories")));
     const [customer, setCustomer] = useState(JSON.parse(localStorage.getItem("user")));
     const [addedFoods, setAddedFoods] = useState([]);
@@ -20,7 +21,8 @@ function ViewAllMenus() {
 
     useEffect(() => {
         window.addEventListener('storage', () => {
-            setRestaurants(JSON.parse(localStorage.getItem("restaurants")) || [])   
+            setRestaurants(JSON.parse(localStorage.getItem("restaurants")) || []);
+            setFoods(JSON.parse(localStorage.getItem("foods")) || []);
             window.location.reload();
           });
     }, []);
@@ -29,6 +31,7 @@ function ViewAllMenus() {
         restaurants.forEach(restaurant => {
             if (restaurant.name == event.target.value) {
                 setCurrentRestaurant(restaurant);
+                getFoods(event.target.value);
             }
         });
         setAddedFoods([]);
@@ -45,6 +48,27 @@ function ViewAllMenus() {
             };
         });
     }
+
+    const getFoods = async(restaurantName) => {
+        axios
+        .get('http://localhost:8080/admin/viewMenu', {
+            params: {
+                restaurantName: restaurantName
+            }
+        })
+        .then(response => {
+            console.log(response.data);
+            localStorage.setItem('foods', JSON.stringify(response.data));
+            setFoods(response.data);   
+        })
+        .catch((error) => setError(error.response.data.message));
+    }
+
+
+    useEffect(() => {
+        console.log(currentRestaurant.name)
+        getFoods(currentRestaurant.name);
+    }, []);
 
     const updateState = async() => {
         await placeOrder();
@@ -189,7 +213,6 @@ function ViewAllMenus() {
                             <Table striped bordered hover key={category.name}>
                                 <thead>
                                     <tr>
-                                    <th>#</th>
                                     <th>Food Name</th>
                                     <th>Description</th>
                                     <th>Price</th>
@@ -197,11 +220,10 @@ function ViewAllMenus() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {currentRestaurant.foods?.map(food => {
+                                    {JSON.parse(localStorage.getItem("foods"))?.map(food => {
                                         if (food.category.name == category.name) {
                                             return (
                                                 <tr key={food.name}>
-                                                    <td key={food.idFood}>{food.idFood}</td>
                                                     <td key={food.name}>{food.name}</td>
                                                     <td key={food.description}>{food.description}</td>
                                                     <td key={food.price}>{food.price + " RON"}</td>

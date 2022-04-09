@@ -118,12 +118,20 @@ public class AdministratorController {
         return new ResponseEntity<>(foodService.findByRestaurant(restaurantName), HttpStatus.ACCEPTED);
     }
 
+    //order operations
     @GetMapping("/viewOrders")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<List<OrderDTO>> getOrders(@Param("restaurantName") String restaurantName) throws NoSuchRestaurantException {
         return new ResponseEntity<>(orderService.findAllByRestaurantName(restaurantName), HttpStatus.ACCEPTED);
     }
 
-    //order operations
+    @PostMapping("/order/accept")
+    public ResponseEntity<OrderDTO> acceptOrder(@RequestBody(required = false) OrderDTO orderDTO) throws InvalidDataException {
+        return new ResponseEntity<>(orderService.acceptOrder(orderDTO), HttpStatus.CREATED);
+    }
 
+    @PostMapping("/order/decline")
+    public ResponseEntity<OrderDTO> declineOrder(@RequestBody(required = false) OrderDTO orderDTO) throws InvalidDataException {
+        return new ResponseEntity<>(orderService.declineOrder(orderDTO), HttpStatus.CREATED);
+    }
 }

@@ -30,4 +30,10 @@ public interface OrderService {
     List<OrderDTO> findAllByRestaurantName(String restaurantName) throws NoSuchRestaurantException;
 
     List<OrderDTO> findAllByCustomerEmail(String customerEmail) throws NoSuchAccountException;
+
+    OrderDTO updateOrderStatus(OrderStatus orderStatus, OrderDTO orderDTO) throws InvalidDataException;
+
+    OrderDTO acceptOrder(OrderDTO orderDTO) throws InvalidDataException;
+
+    OrderDTO declineOrder(OrderDTO orderDTO) throws InvalidDataException;
 }

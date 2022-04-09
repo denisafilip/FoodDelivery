@@ -28,6 +28,7 @@ public class OrderMapper implements Mapper<Order, OrderDTO> {
     @Override
     public OrderDTO convertToDTO(Order order) {
         return OrderDTO.builder()
+                .idOrder(order.getIdOrder())
                 .status(order.getStatus())
                 .customer(CustomerMapper.getInstance().convertToDTO(order.getCustomer()))
                 .foods(order.getFoods().stream()

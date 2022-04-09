@@ -12,6 +12,7 @@ import com.example.secondassignment.service.restaurant.RestaurantServiceImpl;
 import com.example.secondassignment.service.restaurant.exceptions.DuplicateRestaurantNameException;
 import com.example.secondassignment.service.restaurant.exceptions.NoSuchRestaurantException;
 import com.example.secondassignment.service.restaurant.food.FoodServiceImpl;
+import com.example.secondassignment.service.restaurant.order.status.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -148,5 +149,41 @@ public class OrderServiceImpl implements OrderService {
         return orders.map(orderList -> orderList.stream()
                 .map(OrderMapper.getInstance()::convertToDTO)
                 .collect(Collectors.toList())).orElseGet(ArrayList::new);
+    }
+
+    @Override
+    public OrderDTO updateOrderStatus(OrderStatus orderStatus, OrderDTO orderDTO) throws InvalidDataException {
+        OrderState orderState;
+
+        switch (orderDTO.getStatus()) {
+            case PENDING: orderState = new PendingOrderState(); break;
+            case ACCEPTED: orderState = new AcceptedOrderState(); break;
+            case IN_DELIVERY: orderState = new InDeliveryOrderState(); break;
+            case DELIVERED: orderState = new DeliveredOrderState(); break;
+            case DECLINED: orderState = new DeclinedOrderState(); break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + orderDTO.getStatus());
+        }
+
+        Order order = orderRepository.getById(orderDTO.getIdOrder());
+
+        orderState.changeState(order, orderStatus);
+
+        try {
+            Order savedOrder = orderRepository.save(order);
+            return OrderMapper.getInstance().convertToDTO(savedOrder);
+        } catch (Exception e) {
+            throw new InvalidDataException("Could not update the order!");
+        }
+    }
+
+    @Override
+    public OrderDTO acceptOrder(OrderDTO orderDTO) throws InvalidDataException {
+        return updateOrderStatus(OrderStatus.ACCEPTED, orderDTO);
+    }
+
+    @Override
+    public OrderDTO declineOrder(OrderDTO orderDTO) throws InvalidDataException {
+        return updateOrderStatus(OrderStatus.DECLINED, orderDTO);
     }
 }
