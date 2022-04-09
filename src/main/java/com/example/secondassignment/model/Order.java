@@ -40,8 +40,12 @@ public class Order {
     private Restaurant restaurant;
 
     @NonNull
-    @Column(name = "status")
+    @Column(name = "status", nullable = false)
     private OrderStatus status;
+
+    @NonNull
+    @Column(name = "total", nullable = false)
+    private Integer total;
 
     @NonNull
     @ManyToMany(cascade = CascadeType.ALL)

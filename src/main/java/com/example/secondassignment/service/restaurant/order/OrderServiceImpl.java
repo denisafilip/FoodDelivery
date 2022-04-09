@@ -45,6 +45,9 @@ public class OrderServiceImpl implements OrderService {
             throw new InvalidDataException("No suitable restaurant was found when placing the order.");
         }
 
+        if(!restaurant.getDeliveryZones().contains(customer.getAddress().getZone()))
+            throw new InvalidDataException("Sorry! The restaurant " + restaurant.getName() + " does not deliver food to your address!");
+
         List<Food> foods = new ArrayList<>();
         for (FoodDTO foodDTO : orderDTO.getFoods()) {
             Food food = foodService.findByNameAndRestaurant(foodDTO.getName(), restaurant);
@@ -59,6 +62,7 @@ public class OrderServiceImpl implements OrderService {
                 .foods(foods)
                 .date(LocalDate.now())
                 .status(OrderStatus.PENDING)
+                .total(foods.stream().mapToInt(Food::getPrice).sum())
                 .build();
         Order savedOrder = orderRepository.save(order);
         return OrderMapper.getInstance().convertToDTO(savedOrder);

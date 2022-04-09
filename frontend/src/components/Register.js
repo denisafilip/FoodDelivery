@@ -117,24 +117,6 @@ function Register() {
     function handleSubmit(event) {
         registerCustomer(userInfo);
         console.log(userInfo);
-        /*setUserInfo({
-            firstName: "",
-            lastName: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-            address: {},
-            
-        })
-        setAddressState({
-            street: "",
-            number: "",
-            city: "",
-            zone: {},
-            country: "",
-            postalCode: ""
-        })*/
-        
         event.preventDefault();
     }
 

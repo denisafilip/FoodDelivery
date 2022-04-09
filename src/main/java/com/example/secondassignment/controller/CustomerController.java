@@ -62,12 +62,8 @@ public class CustomerController {
     }
 
     @PostMapping("/viewMenu")
-    public ResponseEntity<OrderDTO> placeOrder(OrderDTO orderDTO) {
-        try {
-            return new ResponseEntity<>(orderService.save(orderDTO), HttpStatus.ACCEPTED);
-        } catch (Exception exception) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
-        }
+    public ResponseEntity<OrderDTO> placeOrder(@RequestBody(required = false) OrderDTO orderDTO) throws InvalidDataException {
+        return new ResponseEntity<>(orderService.save(orderDTO), HttpStatus.ACCEPTED);
     }
 
 }

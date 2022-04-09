@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {Card, Table, Button, Modal} from "react-bootstrap";
 import "../../css/FormStyle.css";
+import axios from "axios";
 
 function ViewAllMenus() {
     const [restaurants, setRestaurants] = useState(JSON.parse(localStorage.getItem("restaurants")));
@@ -14,7 +15,7 @@ function ViewAllMenus() {
     })
 
     const [modalShow, setModalShow] = useState(false);
-
+    const [error, setError] = useState("");
 
     useEffect(() => {
         window.addEventListener('storage', () => {
@@ -29,16 +30,58 @@ function ViewAllMenus() {
             if (restaurant.name == event.target.value) {
                 setCurrentRestaurant(restaurant);
             }
-        })
+        });
+        setAddedFoods([]);
     }
 
     function addToCart(food) {
         setAddedFoods(prevState => (
             [...prevState, food]
         ))
+        setOrder(prevState => {
+            return {
+                ...prevState,
+                foods: addedFoods
+            };
+        });
     }
 
-    function MyVerticallyCenteredModal(props) {
+    const removeFromCart = (food) => {
+        console.log(food)
+        let filteredArray = addedFoods.filter(foodItem => foodItem !== food)
+        setAddedFoods(filteredArray);
+        setOrder(prevState => {
+            return {
+                ...prevState,
+                foods: addedFoods
+            };
+        });
+    }
+
+    const placeOrder = async() => {
+        await axios
+        .post("http://localhost:8080/customer/viewMenu", {...order, foods: addedFoods})
+        .then((response) => {
+              alert("You placed an order for the restaurant " + currentRestaurant.name + "!");
+              setOrder({
+                customer: JSON.parse(localStorage.getItem("user")),
+                restaurant: currentRestaurant,
+                foods: []
+              });
+              setAddedFoods([]);
+            console.info(response)
+        })
+        .catch((error) => {
+              setError(error.response.data.message);
+              console.error("There was an error!", error.response.data.message)
+        });
+    }
+
+    function checkoutOrder() {
+        placeOrder();
+    }
+
+    const MyVerticallyCenteredModal = (props) => {
         let totalPrice = 0;
         addedFoods.forEach((food) => {
             totalPrice += food.price;
@@ -58,26 +101,27 @@ function ViewAllMenus() {
             </Modal.Header>
             <Modal.Body>
               {addedFoods?.map(food =>
-                <div key={food.idFood} className="row product">
-                    <div className="col-md-8 product-detail">
-                    <h5>{food.name}</h5>
+                <div key={food.idFood} className="row product align-items-center">
+                    <div className="col-md-6 product-detail">
+                        <h5>{food.name}</h5>
                     </div>
-                    <div className="col-md-4 cart-product-price">
-                    {food.price}
+                    <div className="col-md-2 cart-product-price">
+                        {food.price + " RON"}
                     </div>
+                    <Button className="col-md-2 float-right" block size="sm" variant="primary" onClick={() => removeFromCart(food)}>Remove</Button>
                     <hr/>
               </div>
               )}
-                <div className="row">
+                <div className="row text-right">
                     <div className="col-md-12 text-right">
                         Total: {totalPrice + " RON"}
                     </div>
                 </div>
-              <div className="row">
-                <div className="col-md-12 text-left">
-                    <button className="btn btn-success">
-                    Checkout
-                    </button>
+              <div className="row text-right">
+                <div className="col-md-12 text-right">
+                    <Button variant="primary" className="float-right" onClick={() => checkoutOrder()}>
+                        Checkout
+                    </Button>
                 </div>
               </div>
             </Modal.Body>
@@ -99,6 +143,19 @@ function ViewAllMenus() {
             />
         
             <br/>
+            <br/>
+
+            <Card className="CardStyle">
+                <Card.Body>You can order from only one restaurant at a time!</Card.Body>
+            </Card>
+
+            <br/>
+            <br/>
+
+            <br/>
+                <text style={{color: 'red', justifyContent: 'center', display: 'flex'}}>
+                    {error}
+                </text>
             <br/>
 
             <div key="first">

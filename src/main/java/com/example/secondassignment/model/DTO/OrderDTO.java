@@ -11,11 +11,10 @@ import java.util.Set;
 @Setter
 @Builder
 @AllArgsConstructor
+@RequiredArgsConstructor
 @NoArgsConstructor
+@ToString
 public class OrderDTO {
-
-    @NonNull
-    private LocalDate date;
 
     @NonNull
     private CustomerDTO customer;
@@ -23,8 +22,7 @@ public class OrderDTO {
     @NonNull
     private RestaurantDTO restaurant;
 
-    @NonNull
-    private OrderStatus orderStatus;
+    private OrderStatus status;
 
     @NonNull
     private List<FoodDTO> foods;
