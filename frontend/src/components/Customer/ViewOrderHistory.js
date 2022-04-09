@@ -7,6 +7,12 @@ function ViewOrderHistory() {
     const [customer, setCustomer] = useState(JSON.parse(localStorage.getItem("user")));
     const [orders, setOrders] = useState();
 
+    const PENDING = "PENDING";
+    const ACCEPTED = "ACCEPTED";
+    const DECLINED = "DECLINED";
+    const IN_DELIVERY = "IN_DELIVERY";
+    const DELIVERED = "DELIVERED";
+
     useEffect(() => {
         axios
         .get('http://localhost:8080/customer/viewOrderHistory', {
@@ -47,10 +53,10 @@ function ViewOrderHistory() {
                     <tbody>
                         {orders?.map(order => {
                             return (
-                                <tr key={order.total}>
+                                <tr className={order.status == DECLINED ? "declined" : order.status == ACCEPTED ? "finished" : "in-progress" } key={order.total}>
                                     <td>{order.restaurant.name}</td>
                                     <td>{order.foods?.map(food => { return(food.name + " | "); })}</td>
-                                    <td key={order.status}>{order.status}</td>
+                                    <td key={order.status}><b>{order.status}</b></td>
                                     <td key={order.total}>{order.total}</td>
                                 </tr>
                             );

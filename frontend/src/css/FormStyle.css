@@ -25,10 +25,8 @@
     padding: 7px 10px;
     border: 1px solid #efffff;
     border-radius: 3px;
-    background: #3085d6;
     width: 100%; 
     font-size: 15px;
-    color: white;
     display: block;
 }
 
@@ -75,9 +73,19 @@
     padding: 7px 10px;
     border: 1px solid #efffff;
     border-radius: 3px;
-    background: #3085d6;
     width: 100%; 
     font-size: 15px;
-    color: white;
     display: block;
+}
+
+.in-progress {
+    background: #c7c0eb;
+}
+
+.finished {
+    background: #dbf7cd;
+}
+
+.declined {
+    background: #f0857f;
 }

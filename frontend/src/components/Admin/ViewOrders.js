@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from "react";
-import {Card, Table} from "react-bootstrap";
+import React, {useState, useEffect, useCallback} from "react";
+import {Card, Table, Button} from "react-bootstrap";
 import "../../css/FormStyle.css";
 import axios from "axios";
 
@@ -7,6 +7,7 @@ function ViewOrders() {
     const [admin, setAdmin] = useState(JSON.parse(localStorage.getItem("user")));
     const [orders, setOrders] = useState();
     const [error, setError] = useState("");
+    const [isSending, setIsSending] = useState(false);
 
     const PENDING = "PENDING";
     const ACCEPTED = "ACCEPTED";
@@ -14,8 +15,38 @@ function ViewOrders() {
     const IN_DELIVERY = "IN_DELIVERY";
     const DELIVERED = "DELIVERED";
 
-    useEffect(() => {
-        axios
+    const acceptOrder = useCallback(async (order) => {
+        if (isSending) return;
+        setIsSending(true);
+        await axios
+          .post("http://localhost:8080/admin/order/accept", order)
+          .then((response) => {
+              console.info(response.data);
+          })
+          .catch((error) => {
+              setError(error.response.data.message);
+              console.error("There was an error!", error.response.data.message)
+          });
+          setIsSending(false);
+    }, [isSending]);
+
+    const declineOrder = useCallback(async (order) => {
+        if (isSending) return
+        setIsSending(true)
+        await axios
+          .post("http://localhost:8080/admin/order/decline", order)
+          .then((response) => {
+              console.info(response.data);
+          })
+          .catch((error) => {
+              setError(error.response.data.message);
+              console.error("There was an error!", error.response.data.message)
+          });
+          setIsSending(false);
+    }, [isSending]);
+
+    const updateOrders = async() => {
+        await axios
         .get('http://localhost:8080/admin/viewOrders', {
             params: {
                 restaurantName: JSON.parse(localStorage.getItem("user")).restaurant.name
@@ -25,32 +56,11 @@ function ViewOrders() {
             console.log(response.data);
             setOrders(response.data);   
         });
-    }, [acceptOrder, declineOrder]);
+    }
 
-    const acceptOrder = useCallback((order) => {
-        axios
-          .post("http://localhost:8080/admin/order/accept", order)
-          .then((response) => {
-              console.info(response.data);
-          })
-          .catch((error) => {
-              setError(error.response.data.message);
-              console.error("There was an error!", error.response.data.message)
-          });
-    });
-
-    const declineOrder = useCallback((order) => {
-        axios
-          .post("http://localhost:8080/admin/order/decline", order)
-          .then((response) => {
-              console.info(response.data);
-          })
-          .catch((error) => {
-              setError(error.response.data.message);
-              console.error("There was an error!", error.response.data.message)
-          });
-    });
-
+    useEffect(() => {
+        updateOrders();
+    }, []);
 
     if (orders?.length == 0) { 
         return (
@@ -92,12 +102,12 @@ function ViewOrders() {
                                     <td key={order.status}>{order.status}</td>
                                     <td key={order.total}>{order.total}</td>
                                     <td key={"accept" + order.idOrder}>
-                                        <Button variant="success" disabled={order.status == PENDING ? "disabled" : ""} onClick={() => acceptOrder(order)}>
+                                        <Button variant="success" disabled={order.status != PENDING ? "disabled" : ""} onClick={() => acceptOrder(order)}>
                                             Accept
                                         </Button>
                                     </td>
                                     <td key={"decline" + order.idOrder}>
-                                        <Button variant="error" disabled={order.status == PENDING ? "disabled" : ""} onClick={() => declineOrder(order)}>
+                                        <Button variant="danger" disabled={order.status != PENDING ? "disabled" : ""} onClick={() => declineOrder(order)}>
                                             Decline
                                         </Button>
                                     </td>
