@@ -19,6 +19,7 @@ export default function CustomerHome() {
                     <Nav className="me-auto">
                         <Nav.Link href="/customer/viewRestaurants">View Restaurants</Nav.Link>
                         <Nav.Link href="/customer/viewMenu">View Menu</Nav.Link>
+                        <Nav.Link href="/customer/viewOrderHistory">View Order History</Nav.Link>
                     </Nav>
                 </Container>
             </Navbar>

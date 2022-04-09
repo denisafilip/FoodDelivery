@@ -38,6 +38,7 @@ public class CustomerMapper implements Mapper<Customer, CustomerDTO> {
                 .email(customer.getEmail())
                 .address(customer.getAddress())
                 .password(customer.getPassword())
+                .orders(customer.getOrders())
                 .build();
     }
 

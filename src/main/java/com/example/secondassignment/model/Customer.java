@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -23,11 +25,12 @@ public class Customer extends Account {
 
     @JsonManagedReference(value = "order-customer")
     @OneToMany(mappedBy = "customer", orphanRemoval = true)
-    private List<Order> orders;
+    private Set<Order> orders;
 
     @Builder(builderMethodName = "CustomerBuilder")
     public Customer(@NonNull String firstName, @NonNull String lastName, @NonNull String email, @NonNull String password, @NonNull Address address) {
         super(firstName, lastName, email, password);
         this.address = address;
+        this.orders = new HashSet<>();
     }
 }

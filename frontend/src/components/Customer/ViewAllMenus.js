@@ -7,9 +7,10 @@ function ViewAllMenus() {
     const [restaurants, setRestaurants] = useState(JSON.parse(localStorage.getItem("restaurants")));
     const [currentRestaurant, setCurrentRestaurant] = useState(restaurants[0]);
     const [foodCategories, setFoodCategories] = useState(JSON.parse(localStorage.getItem("foodCategories")));
+    const [customer, setCustomer] = useState(JSON.parse(localStorage.getItem("user")));
     const [addedFoods, setAddedFoods] = useState([]);
     const [order, setOrder] = useState({
-        customer: JSON.parse(localStorage.getItem("user")),
+        customer: customer,
         restaurant: currentRestaurant,
         foods: []
     })
@@ -46,8 +47,23 @@ function ViewAllMenus() {
         });
     }
 
+    const updateState = async() => {
+        await placeOrder();
+        axios
+          .get("http://localhost:8080/customer/get", {
+              params: {
+                  customerEmail: customer.email
+              }
+          })
+          .then((response) => {
+                localStorage.setItem('user', JSON.stringify(response.data));
+                console.log(response.data);
+          })
+          .catch((error) => console.error("There was an error when adding food!", error));
+    }
+
+
     const removeFromCart = (food) => {
-        console.log(food)
         let filteredArray = addedFoods.filter(foodItem => foodItem !== food)
         setAddedFoods(filteredArray);
         setOrder(prevState => {
@@ -64,7 +80,7 @@ function ViewAllMenus() {
         .then((response) => {
               alert("You placed an order for the restaurant " + currentRestaurant.name + "!");
               setOrder({
-                customer: JSON.parse(localStorage.getItem("user")),
+                customer: customer,
                 restaurant: currentRestaurant,
                 foods: []
               });
@@ -78,7 +94,7 @@ function ViewAllMenus() {
     }
 
     function checkoutOrder() {
-        placeOrder();
+        updateState();
     }
 
     const MyVerticallyCenteredModal = (props) => {
@@ -86,7 +102,6 @@ function ViewAllMenus() {
         addedFoods.forEach((food) => {
             totalPrice += food.price;
         });
-        console.log(totalPrice)
         return (
           <Modal
             {...props}
