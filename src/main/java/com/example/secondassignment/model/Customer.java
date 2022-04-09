@@ -24,7 +24,8 @@ public class Customer extends Account {
     @JoinColumn(name = "id_address")
     private Address address;
 
-    @JsonBackReference(value = "order-customer")
+    //@JsonBackReference(value = "order-customer")
+    @JsonIgnore
     @OneToMany(mappedBy = "customer", orphanRemoval = true)
     private Set<Order> orders;
 

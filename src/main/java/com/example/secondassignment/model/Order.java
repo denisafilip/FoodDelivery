@@ -29,13 +29,13 @@ public class Order {
     private LocalDate date;
 
     @NonNull
-    @JsonManagedReference(value = "order-customer")
+    //@JsonManagedReference(value = "order-customer")
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_customer")
     private Customer customer;
 
     @NonNull
-    @JsonManagedReference(value = "order-restaurant")
+    //@JsonManagedReference(value = "order-restaurant")
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_restaurant")
     private Restaurant restaurant;

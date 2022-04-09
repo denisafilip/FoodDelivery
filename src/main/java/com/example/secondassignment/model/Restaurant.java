@@ -47,11 +47,13 @@ public class Restaurant {
     @ToString.Exclude
     private Administrator administrator;
 
-    @JsonBackReference(value = "food-restaurant")
+    //@JsonBackReference(value = "food-restaurant")
+    @JsonIgnore
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private Set<Food> foods;
 
-    @JsonBackReference(value = "order-restaurant")
+    //@JsonBackReference(value = "order-restaurant")
+    @JsonIgnore
     @OneToMany(mappedBy = "restaurant", orphanRemoval = true)
     private List<Order> orders;
 }

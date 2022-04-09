@@ -25,8 +25,9 @@ function AddRestaurant() {
             postalCode: ""
         },
         deliveryZones: [],
-        administratorDTO: useState(JSON.parse(localStorage.getItem("zones")))
+        administratorDTO: JSON.parse(localStorage.getItem("user"))
     });
+    const [error, setError] = useState("");
 
     const navigate = useNavigate();
 
@@ -95,41 +96,44 @@ function AddRestaurant() {
     }
 
     const addRestaurant = async() => {
+        console.log(restaurantInfo);
         await axios
           .post("http://localhost:8080/admin/addRestaurant", restaurantInfo)
           .then((response) => {
               console.info(response);
               localStorage.setItem('restaurant', JSON.stringify(response.data));
           })
-          .catch((error) => console.error("There was an error!", error));
+          .catch((error) => {
+            setError(error.response.data.message);  
+            localStorage.removeItem('restaurant');
+            console.error("There was an error!", error.response.data.message)
+          });
     }
 
     const updateRestaurants = async() => {
         await addRestaurant();
+
+        await axios
+          .get("http://localhost:8080/admin/get", {
+              params: {
+                  adminEmail: JSON.parse(localStorage.getItem("user")).email
+              }
+          })
+          .then((response) => {
+                localStorage.setItem('user', JSON.stringify(response.data));
+          })
+          .catch((error) => console.error("There was an error when adding food!", error));
+
         axios
             .get('http://localhost:8080/customer/viewRestaurants')
             .then(response => {
                 localStorage.setItem('restaurants', JSON.stringify(response.data));
+                navigate("/admin/addFood");
             });
     }
 
     function handleSubmit(event) {
-        updateRestaurants();
-        console.log(restaurantInfo);
-        setRestaurantInfo({
-            name: "",
-            address: {},
-            zones: []
-        })
-        setAddressState({
-            street: "",
-            number: "",
-            city: "",
-            zone: {},
-            country: "",
-            postalCode: ""
-        })
-        navigate("/admin");
+        updateRestaurants();   
         event.preventDefault();
     }
 
@@ -168,7 +172,7 @@ function AddRestaurant() {
                     <Form.Control name="postalCode" type="text" value={addressState.postalCode} onChange={handleChangeAddress}/>
                 </Form.Group>
 
-                <div className="select-container">
+                <div>
                     <select value={addressState.zone.idZone} onChange={handleSelect}>
                         {zones.map(zone =>
                             <option value={zone.idZone} key={zone.idZone}>{zone.name}</option>
@@ -176,13 +180,18 @@ function AddRestaurant() {
                     </select>
                 </div>
 
-                <div className="select-container">
+                <div>
                     <select multiple={true} value={restaurantInfo.deliveryZones} onChange={handleDeliveryZoneAddition}>
                         {zones.map(zone =>
                             <option value={zone.name} key={zone.idZone}>{zone.name}</option>
                         )}
                     </select>
                 </div>
+
+                <br/>
+                <text style={{color: 'red', justifyContent: 'center', display: 'flex'}}>
+                    {error}
+                </text>
 
                 <Button variant="primary" block size="lg" type="submit">
                     Add Restaurant

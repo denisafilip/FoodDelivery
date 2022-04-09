@@ -26,7 +26,4 @@ public class RestaurantDTO {
 
     @NonNull
     private AdministratorDTO administratorDTO;
-
-    @NonNull
-    private Set<Food> foods;
 }

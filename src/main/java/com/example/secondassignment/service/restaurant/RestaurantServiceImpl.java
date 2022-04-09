@@ -8,6 +8,7 @@ import com.example.secondassignment.model.Administrator;
 import com.example.secondassignment.model.Restaurant;
 import com.example.secondassignment.model.Zone;
 import com.example.secondassignment.repository.RestaurantRepository;
+import com.example.secondassignment.service.account.exceptions.NoSuchAccountException;
 import com.example.secondassignment.service.address.AddressService;
 import com.example.secondassignment.service.account.administrator.AdministratorServiceImpl;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
@@ -51,14 +52,14 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public RestaurantDTO save(RestaurantDTO restaurantDTO) throws InvalidDataException, DuplicateRestaurantNameException {
+    public RestaurantDTO save(RestaurantDTO restaurantDTO) throws InvalidDataException, DuplicateRestaurantNameException, NoSuchAccountException {
         if (this.findByName(restaurantDTO.getName()) != null) {
             throw new DuplicateRestaurantNameException("A restaurant with the name " + restaurantDTO.getName() + " already exists!");
         }
 
         Administrator administrator = administratorService.findByEmail(restaurantDTO.getAdministratorDTO().getEmail());
         if (administrator == null) {
-            throw new NoSuchElementException("No corresponding administrator was found!");
+            throw new NoSuchAccountException("No corresponding administrator was found!");
         }
 
         Address address = addressService.save(restaurantDTO.getAddress());
@@ -73,7 +74,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         String validationMsg = validateRestaurant(restaurantDTO.getName());
         if (validationMsg != null) {
-            throw new InvalidDataException("The details of the restaurant are incorrect!");
+            throw new InvalidDataException(validationMsg);
         }
 
         Restaurant restaurant = Restaurant.builder()

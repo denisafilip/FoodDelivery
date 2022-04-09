@@ -41,7 +41,7 @@ public class Food {
     private Category category;
 
     @NonNull
-    @JsonManagedReference(value = "food-restaurant")
+    //@JsonManagedReference(value = "food-restaurant")
     @ToString.Exclude
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_restaurant")

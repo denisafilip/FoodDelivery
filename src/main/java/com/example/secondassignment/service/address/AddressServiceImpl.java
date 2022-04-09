@@ -32,7 +32,7 @@ public class AddressServiceImpl implements AddressService {
     public Address save(Address address) throws InvalidDataException {
         String validationMsg = validateAddress(address);
         if (validationMsg != null) {
-            throw new InvalidDataException("The details of the address are incorrect!");
+            throw new InvalidDataException(validationMsg);
         }
 
         Optional<Address> addressOptional = addressRepository.findByStreetAndNumberAndCity(address.getStreet(), address.getNumber(), address.getCity());

@@ -9,6 +9,7 @@ import com.example.secondassignment.model.Administrator;
 import com.example.secondassignment.model.Category;
 import com.example.secondassignment.model.Zone;
 import com.example.secondassignment.service.account.administrator.AdministratorServiceImpl;
+import com.example.secondassignment.service.account.exceptions.NoSuchAccountException;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
 import com.example.secondassignment.service.restaurant.exceptions.DuplicateFoodNameException;
 import com.example.secondassignment.service.restaurant.exceptions.NoSuchRestaurantException;
@@ -84,7 +85,7 @@ public class AdministratorController {
     //restaurant operations
     @PostMapping("/addRestaurant")
     public ResponseEntity<RestaurantDTO> addRestaurant(@RequestBody(required = false) RestaurantDTO restaurantDTO) throws
-            InvalidDataException, DuplicateRestaurantNameException {
+            InvalidDataException, DuplicateRestaurantNameException, NoSuchAccountException {
         return new ResponseEntity<>(restaurantService.save(restaurantDTO), HttpStatus.CREATED);
     }
 
