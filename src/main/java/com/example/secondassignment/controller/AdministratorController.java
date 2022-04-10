@@ -4,6 +4,7 @@ import com.example.secondassignment.model.DTO.AdministratorDTO;
 import com.example.secondassignment.model.DTO.FoodDTO;
 import com.example.secondassignment.model.DTO.OrderDTO;
 import com.example.secondassignment.model.DTO.RestaurantDTO;
+import com.example.secondassignment.model.OrderStatus;
 import com.example.secondassignment.model.mappers.AdministratorMapper;
 import com.example.secondassignment.model.Administrator;
 import com.example.secondassignment.model.Category;
@@ -27,6 +28,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
@@ -134,4 +136,15 @@ public class AdministratorController {
     public ResponseEntity<OrderDTO> declineOrder(@RequestBody(required = false) OrderDTO orderDTO) throws InvalidDataException {
         return new ResponseEntity<>(orderService.declineOrder(orderDTO), HttpStatus.CREATED);
     }
+
+    @PostMapping("/order/startDelivery")
+    public ResponseEntity<OrderDTO> startDelivery(@RequestBody(required = false) OrderDTO orderDTO) throws InvalidDataException {
+        return new ResponseEntity<>(orderService.startDelivery(orderDTO), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/order/endDelivery")
+    public ResponseEntity<OrderDTO> endDelivery(@RequestBody(required = false) OrderDTO orderDTO) throws InvalidDataException {
+        return new ResponseEntity<>(orderService.endDelivery(orderDTO), HttpStatus.CREATED);
+    }
+
 }

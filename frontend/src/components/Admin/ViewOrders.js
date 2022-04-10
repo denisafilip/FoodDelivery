@@ -28,6 +28,7 @@ function ViewOrders() {
               console.error("There was an error!", error.response.data.message)
           });
           setIsSending(false);
+          updateOrders();
     }, [isSending]);
 
     const declineOrder = useCallback(async (order) => {
@@ -43,19 +44,53 @@ function ViewOrders() {
               console.error("There was an error!", error.response.data.message)
           });
           setIsSending(false);
+          updateOrders();
+    }, [isSending]);
+
+    const startDelivery = useCallback(async (order) => {
+        if (isSending) return
+        setIsSending(true)
+        await axios
+          .post("http://localhost:8080/admin/order/startDelivery", order)
+          .then((response) => {
+              console.info(response.data);
+          })
+          .catch((error) => {
+              setError(error.response.data.message);
+              console.error("There was an error!", error.response.data.message)
+          });
+          setIsSending(false);
+          updateOrders();
+    }, [isSending]);
+
+    const endDelivery = useCallback(async (order) => {
+        if (isSending) return
+        setIsSending(true)
+        await axios
+          .post("http://localhost:8080/admin/order/endDelivery", order)
+          .then((response) => {
+              console.info(response.data);
+          })
+          .catch((error) => {
+              setError(error.response.data.message);
+              console.error("There was an error!", error.response.data.message)
+          });
+          setIsSending(false);
+          updateOrders();
     }, [isSending]);
 
     const updateOrders = async() => {
         await axios
-        .get('http://localhost:8080/admin/viewOrders', {
-            params: {
-                restaurantName: JSON.parse(localStorage.getItem("user")).restaurant.name
-            }
-        })
-        .then(response => {
-            console.log(response.data);
-            setOrders(response.data);   
-        });
+            .get('http://localhost:8080/admin/viewOrders', {
+                params: {
+                    restaurantName: JSON.parse(localStorage.getItem("user")).restaurant.name
+                }
+            })
+            .then(response => {
+                console.log(response.data);
+                localStorage.setItem('orders', JSON.stringify(response.data));
+                setOrders(response.data);   
+            });
     }
 
     useEffect(() => {
@@ -91,15 +126,17 @@ function ViewOrders() {
                             <th>Total Price</th>
                             <th>Accept</th>
                             <th>Decline</th>
+                            <th>Start Delivery</th>
+                            <th>Stop Delivery</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {orders?.map(order => {
+                        {JSON.parse(localStorage.getItem("orders"))?.map(order => {
                             return (
                                 <tr key={order.idOrder}>
                                     <td key={order.customer.email}>{order.customer.email}</td>
                                     <td key={order.idOrder}>{order.foods?.map(food => { return(food.name + " | "); })}</td>
-                                    <td key={order.status}>{order.status}</td>
+                                    <td key={order.status}><b>{order.status}</b></td>
                                     <td key={order.total}>{order.total}</td>
                                     <td key={"accept" + order.idOrder}>
                                         <Button variant="success" disabled={order.status != PENDING ? "disabled" : ""} onClick={() => acceptOrder(order)}>
@@ -109,6 +146,16 @@ function ViewOrders() {
                                     <td key={"decline" + order.idOrder}>
                                         <Button variant="danger" disabled={order.status != PENDING ? "disabled" : ""} onClick={() => declineOrder(order)}>
                                             Decline
+                                        </Button>
+                                    </td>
+                                    <td key={"in_delivery" + order.idOrder}>
+                                        <Button variant="warning" disabled={order.status != ACCEPTED ? "disabled" : ""} onClick={() => startDelivery(order)}>
+                                            In Delivery
+                                        </Button>
+                                    </td>
+                                    <td key={"delivered" + order.idOrder}>
+                                        <Button variant="info" disabled={order.status != IN_DELIVERY ? "disabled" : ""} onClick={() => endDelivery(order)}>
+                                            Delivered
                                         </Button>
                                     </td>
                                 </tr>

@@ -36,4 +36,8 @@ public interface OrderService {
     OrderDTO acceptOrder(OrderDTO orderDTO) throws InvalidDataException;
 
     OrderDTO declineOrder(OrderDTO orderDTO) throws InvalidDataException;
+
+    OrderDTO startDelivery(OrderDTO orderDTO) throws InvalidDataException;
+
+    OrderDTO endDelivery(OrderDTO orderDTO) throws InvalidDataException;
 }

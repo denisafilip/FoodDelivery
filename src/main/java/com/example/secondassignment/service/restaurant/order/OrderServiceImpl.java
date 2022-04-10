@@ -186,4 +186,14 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO declineOrder(OrderDTO orderDTO) throws InvalidDataException {
         return updateOrderStatus(OrderStatus.DECLINED, orderDTO);
     }
+
+    @Override
+    public OrderDTO startDelivery(OrderDTO orderDTO) throws InvalidDataException {
+        return updateOrderStatus(OrderStatus.IN_DELIVERY, orderDTO);
+    }
+
+    @Override
+    public OrderDTO endDelivery(OrderDTO orderDTO) throws InvalidDataException {
+        return updateOrderStatus(OrderStatus.DELIVERED, orderDTO);
+    }
 }
