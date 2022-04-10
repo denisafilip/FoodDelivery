@@ -1,13 +1,14 @@
 import React, {useState, useEffect, useCallback} from "react";
-import {Card, Table, Button} from "react-bootstrap";
+import {Card, Table, Button, Form} from "react-bootstrap";
 import "../../css/FormStyle.css";
 import axios from "axios";
 
 function ViewOrders() {
     const [admin, setAdmin] = useState(JSON.parse(localStorage.getItem("user")));
-    const [orders, setOrders] = useState();
+    const [orders, setOrders] = useState([]);
     const [error, setError] = useState("");
     const [isSending, setIsSending] = useState(false);
+    const [filterStatus, setFilterStatus] = useState("");
 
     const PENDING = "PENDING";
     const ACCEPTED = "ACCEPTED";
@@ -97,6 +98,7 @@ function ViewOrders() {
         updateOrders();
     }, []);
 
+
     if (orders?.length == 0) { 
         return (
             <Card className="CardStyle">
@@ -108,12 +110,24 @@ function ViewOrders() {
     } else {
         return (
             <div className="TableStyle">
+
+                <br/>
+                <br/>
+
+                <Form>
+                    <Form.Group className="mb-3" controlId="formBasicText">
+                        <Form.Text>
+                            🔎 Filter the orders by status:
+                        </Form.Text>
+                        <br/>
+                        <Form.Control type="text" placeholder="order status" value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}/>
+                    </Form.Group>
+                </Form>
             
                 <br/>
                 <br/>
 
-                <br/>
-                <text style={{color: 'red', justifyContent: 'center', display: 'flex'}}>
+                <text className="error-message">
                     {error}
                 </text>
 
@@ -131,7 +145,8 @@ function ViewOrders() {
                         </tr>
                     </thead>
                     <tbody>
-                        {JSON.parse(localStorage.getItem("orders"))?.map(order => {
+                        {JSON.parse(localStorage.getItem("orders"))?.filter(order => order.status.startsWith(filterStatus.toUpperCase()) || filterStatus === "")
+                        .map(order => {
                             return (
                                 <tr key={order.idOrder}>
                                     <td key={order.customer.email}>{order.customer.email}</td>

@@ -56,8 +56,8 @@ function AddFood() {
                 setFoodInfo({
                     name: "",
                     price: 0,
+                    category: foodCategories[0],
                     description: "",
-                    category: {},
                     restaurantDTO: JSON.parse(localStorage.getItem("user")).restaurant
                 })
               console.info(response)
@@ -127,7 +127,7 @@ function AddFood() {
                 </Form.Group>
 
                 <br/>
-                <text style={{color: 'red', justifyContent: 'center', display: 'flex'}}>
+                <text className="error-message">
                     {error}
                 </text>
 

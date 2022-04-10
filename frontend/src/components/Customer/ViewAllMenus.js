@@ -191,7 +191,7 @@ function ViewAllMenus() {
             <br/>
 
             <br/>
-                <text style={{color: 'red', justifyContent: 'center', display: 'flex'}}>
+                <text className="error-message">
                     {error}
                 </text>
             <br/>

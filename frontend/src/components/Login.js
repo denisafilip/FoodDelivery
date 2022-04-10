@@ -72,7 +72,7 @@ function Login() {
                     />
                 </Form.Group>
                 <br/>
-                <text style={{color: 'red', justifyContent: 'center', display: 'flex'}}>
+                <text className="error-message">
                     {error}
                 </text>
 
