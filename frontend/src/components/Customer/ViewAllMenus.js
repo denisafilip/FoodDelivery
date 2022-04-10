@@ -32,6 +32,7 @@ function ViewAllMenus() {
             if (restaurant.name == event.target.value) {
                 setCurrentRestaurant(restaurant);
                 getFoods(event.target.value);
+                setError("");
             }
         });
         setAddedFoods([]);
@@ -107,6 +108,7 @@ function ViewAllMenus() {
                 restaurant: currentRestaurant,
                 foods: []
               });
+              setError("");
               setAddedFoods([]);
             console.info(response)
         })
