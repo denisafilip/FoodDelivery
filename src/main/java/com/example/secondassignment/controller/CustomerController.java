@@ -10,6 +10,7 @@ import com.example.secondassignment.service.exceptions.InvalidDataException;
 import com.example.secondassignment.service.restaurant.RestaurantServiceImpl;
 import com.example.secondassignment.service.restaurant.exceptions.NoSuchRestaurantException;
 import com.example.secondassignment.service.restaurant.order.OrderServiceImpl;
+import com.example.secondassignment.service.restaurant.order.ViewOrdersFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,9 @@ public class CustomerController {
 
     @Autowired
     private RestaurantServiceImpl restaurantService;
+
+    @Autowired
+    private ViewOrdersFacade viewOrdersFacade;
 
     @PostMapping("/register")
     public ResponseEntity<CustomerDTO> registerCustomer(@RequestBody(required = false) CustomerDTO customerDTO)
@@ -64,8 +68,9 @@ public class CustomerController {
 
     @GetMapping("/viewOrderHistory")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<List<OrderDTO>> getOrders(@Param("customerEmail") String customerEmail) throws NoSuchRestaurantException {
-        return new ResponseEntity<>(orderService.findAllByCustomerEmail(customerEmail), HttpStatus.ACCEPTED);
+    public ResponseEntity<List<OrderDTO>> getOrders(@Param("customerEmail") String customerEmail)
+            throws NoSuchRestaurantException, InvalidDataException {
+        return new ResponseEntity<>(viewOrdersFacade.findAllByRestaurantOrCustomer(customerEmail, null), HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/viewMenu")

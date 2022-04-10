@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Container, Nav, Navbar } from 'react-bootstrap';
+import { Container, Nav, Navbar, Card } from 'react-bootstrap';
 import {Outlet} from 'react-router-dom';
 import axios from "axios";
  

@@ -1,13 +1,9 @@
 package com.example.secondassignment.service.account.administrator;
 
 import com.example.secondassignment.model.DTO.AdministratorDTO;
-import com.example.secondassignment.model.DTO.OrderDTO;
-import com.example.secondassignment.model.OrderStatus;
 import com.example.secondassignment.model.mappers.AdministratorMapper;
 import com.example.secondassignment.model.Administrator;
 import com.example.secondassignment.repository.AdministratorRepository;
-import com.example.secondassignment.service.exceptions.InvalidDataException;
-import com.example.secondassignment.service.restaurant.order.OrderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;

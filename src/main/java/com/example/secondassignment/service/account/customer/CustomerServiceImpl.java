@@ -11,7 +11,6 @@ import com.example.secondassignment.service.exceptions.InvalidDataException;
 import com.example.secondassignment.service.validators.NameValidator;
 import com.example.secondassignment.service.validators.UserEmailValidator;
 import com.example.secondassignment.service.validators.UserPasswordValidator;
-import org.omg.PortableInterceptor.ORBInitInfoPackage.DuplicateName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,6 @@
 package com.example.secondassignment.service.restaurant.food;
 
 import com.example.secondassignment.model.DTO.FoodDTO;
-import com.example.secondassignment.model.mappers.AdministratorMapper;
 import com.example.secondassignment.model.mappers.FoodMapper;
 import com.example.secondassignment.model.*;
 import com.example.secondassignment.repository.FoodRepository;

@@ -29,13 +29,13 @@ public class Address {
     @Column(name = "number")
     private String number;
 
-    @NonNull
-    @Column(name = "city")
-    private String city;
-
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_zone")
     private Zone zone;
+
+    @NonNull
+    @Column(name = "city")
+    private String city;
 
     @NonNull
     @Column(name = "country")

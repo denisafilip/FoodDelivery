@@ -4,7 +4,6 @@ import com.example.secondassignment.model.DTO.AdministratorDTO;
 import com.example.secondassignment.model.DTO.FoodDTO;
 import com.example.secondassignment.model.DTO.OrderDTO;
 import com.example.secondassignment.model.DTO.RestaurantDTO;
-import com.example.secondassignment.model.OrderStatus;
 import com.example.secondassignment.model.mappers.AdministratorMapper;
 import com.example.secondassignment.model.Administrator;
 import com.example.secondassignment.model.Category;
@@ -20,6 +19,7 @@ import com.example.secondassignment.service.restaurant.RestaurantServiceImpl;
 import com.example.secondassignment.service.restaurant.exceptions.DuplicateRestaurantNameException;
 import com.example.secondassignment.service.address.zone.ZoneServiceImpl;
 import com.example.secondassignment.service.restaurant.order.OrderServiceImpl;
+import com.example.secondassignment.service.restaurant.order.ViewOrdersFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
@@ -28,7 +28,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
@@ -52,6 +51,9 @@ public class AdministratorController {
     @Autowired
     private OrderServiceImpl orderService;
 
+    @Autowired
+    private ViewOrdersFacade viewOrdersFacade;
+
     @GetMapping("/getAll")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public List<AdministratorDTO> getAdministrators() {
@@ -66,14 +68,11 @@ public class AdministratorController {
 
     @PostMapping("/save")
     public ResponseEntity<AdministratorDTO> save(@Validated @RequestBody Administrator administrator) {
-        try {
-            return new ResponseEntity<>(AdministratorMapper.getInstance().convertToDTO(administratorService.save(administrator)),
+        return new ResponseEntity<>(AdministratorMapper.getInstance().convertToDTO(administratorService.save(administrator)),
                     HttpStatus.CREATED);
-        } catch (Exception exception) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
     }
 
+    //restaurant operations
     @GetMapping("/addRestaurant")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<List<Zone>> getZones() {
@@ -84,21 +83,10 @@ public class AdministratorController {
         }
     }
 
-    //restaurant operations
     @PostMapping("/addRestaurant")
     public ResponseEntity<RestaurantDTO> addRestaurant(@RequestBody(required = false) RestaurantDTO restaurantDTO) throws
             InvalidDataException, DuplicateRestaurantNameException, NoSuchAccountException {
         return new ResponseEntity<>(restaurantService.save(restaurantDTO), HttpStatus.CREATED);
-    }
-
-    @DeleteMapping(value = "/deleteRestaurant")
-    public ResponseEntity<String> deleteRestaurant(@RequestBody Integer id) {
-        try {
-            String msg = restaurantService.delete(id);
-            return new ResponseEntity<>(msg, HttpStatus.OK);
-        } catch (Exception exception) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
     }
 
     //food operations
@@ -123,8 +111,9 @@ public class AdministratorController {
     //order operations
     @GetMapping("/viewOrders")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<List<OrderDTO>> getOrders(@Param("restaurantName") String restaurantName) throws NoSuchRestaurantException {
-        return new ResponseEntity<>(orderService.findAllByRestaurantName(restaurantName), HttpStatus.ACCEPTED);
+    public ResponseEntity<List<OrderDTO>> getOrders(@Param("restaurantName") String restaurantName)
+            throws NoSuchRestaurantException, InvalidDataException {
+        return new ResponseEntity<>(viewOrdersFacade.findAllByRestaurantOrCustomer(null, restaurantName), HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/order/accept")
