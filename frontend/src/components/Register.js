@@ -39,9 +39,6 @@ function Register() {
     }
 
     function validateForm() {
-        if (userInfo.password != userInfo.confirmPassword) {
-            setError("Your passwords do not match!");
-        }
         return userInfo.email.length > 0 && userInfo.password.length > 0 && 
             userInfo.firstName.length > 0 && userInfo.lastName.length > 0 &&
             userInfo.address.street.length > 0 && userInfo.address.country.length > 0 &&
