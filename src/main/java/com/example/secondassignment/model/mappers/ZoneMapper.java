@@ -3,14 +3,27 @@ package com.example.secondassignment.model.mappers;
 import com.example.secondassignment.model.DTO.ZoneDTO;
 import com.example.secondassignment.model.Zone;
 
+/**
+ * Singleton class used for mapping a Zone to a ZoneDTO and vice-versa.
+ */
 public class ZoneMapper implements Mapper<Zone, ZoneDTO> {
 
+    /**
+     * Singleton instance of a ZoneMapper class.
+     */
     private static ZoneMapper zoneMapper = null;
 
+    /**
+     * Constructor.
+     */
     private ZoneMapper() {
 
     }
 
+    /**
+     * Retrieves the single instance of the ZoneMapper class.
+     * @return the instance of the ZoneMapper class.
+     */
     public static ZoneMapper getInstance() {
         if (zoneMapper == null) {
             zoneMapper = new ZoneMapper();
@@ -20,8 +33,6 @@ public class ZoneMapper implements Mapper<Zone, ZoneDTO> {
 
     @Override
     public Zone convertFromDTO(ZoneDTO zoneDTO) {
-        //Optional<Zone> zone = zoneRepository.findByName(zoneDTO.getName());
-        //return zone.orElse(null);
         return null;
     }
 

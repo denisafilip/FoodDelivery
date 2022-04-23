@@ -4,13 +4,16 @@ import com.example.secondassignment.model.DTO.AdministratorDTO;
 import com.example.secondassignment.model.DTO.FoodDTO;
 import com.example.secondassignment.model.DTO.OrderDTO;
 import com.example.secondassignment.model.DTO.RestaurantDTO;
+import com.example.secondassignment.model.Restaurant;
 import com.example.secondassignment.model.mappers.AdministratorMapper;
 import com.example.secondassignment.model.Administrator;
 import com.example.secondassignment.model.Category;
 import com.example.secondassignment.model.Zone;
+import com.example.secondassignment.model.mappers.RestaurantMapper;
 import com.example.secondassignment.service.account.administrator.AdministratorServiceImpl;
 import com.example.secondassignment.service.account.exceptions.NoSuchAccountException;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
+import com.example.secondassignment.service.restaurant.PDFGenerator;
 import com.example.secondassignment.service.restaurant.exceptions.DuplicateFoodNameException;
 import com.example.secondassignment.service.restaurant.exceptions.NoSuchRestaurantException;
 import com.example.secondassignment.service.restaurant.food.FoodServiceImpl;
@@ -20,13 +23,23 @@ import com.example.secondassignment.service.restaurant.exceptions.DuplicateResta
 import com.example.secondassignment.service.address.zone.ZoneServiceImpl;
 import com.example.secondassignment.service.restaurant.order.OrderServiceImpl;
 import com.example.secondassignment.service.restaurant.order.ViewOrdersFacade;
+import com.sun.xml.internal.ws.client.sei.ResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -134,6 +147,28 @@ public class AdministratorController {
     @PostMapping("/order/endDelivery")
     public ResponseEntity<OrderDTO> endDelivery(@RequestBody(required = false) OrderDTO orderDTO) throws InvalidDataException {
         return new ResponseEntity<>(orderService.endDelivery(orderDTO), HttpStatus.CREATED);
+    }
+
+    @RequestMapping("viewMenu/export")
+    public ResponseEntity<InputStreamResource> generatePDF(@Param("restaurantName") String restaurantName) throws IOException {
+        Restaurant restaurant = restaurantService.findByName(restaurantName);
+        PDFGenerator generator = new PDFGenerator();
+        generator.setRestaurant(restaurant);
+        String path = generator.writeMenuToPDF();
+        File file = new File(path);
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
+
+        MediaType mediaType = MediaTypeFactory
+                .getMediaType(resource)
+                .orElse(MediaType.APPLICATION_OCTET_STREAM);
+
+        System.out.println(file.getName());
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(mediaType);
+        headers.setContentLength(file.length());
+        ContentDisposition disposition = ContentDisposition.attachment().filename(file.getName()).build();
+        headers.setContentDisposition(disposition);
+        return ResponseEntity.ok().headers(headers).body(resource);
     }
 
 }

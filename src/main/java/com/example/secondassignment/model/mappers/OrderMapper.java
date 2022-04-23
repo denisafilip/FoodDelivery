@@ -5,14 +5,27 @@ import com.example.secondassignment.model.Order;
 
 import java.util.stream.Collectors;
 
+/**
+ * Singleton class used for mapping an Order to an OrderDTO and vice-versa.
+ */
 public class OrderMapper implements Mapper<Order, OrderDTO> {
 
+    /**
+     * Singleton instance of the OrderMapper class.
+     */
     private static OrderMapper orderMapper = null;
 
+    /**
+     * Constructor.
+     */
     private OrderMapper() {
 
     }
 
+    /**
+     * Retrieves the single instance of the OrderMapper class.
+     * @return the instance of the OrderMapper class.
+     */
     public static OrderMapper getInstance() {
         if (orderMapper == null) {
             orderMapper = new OrderMapper();

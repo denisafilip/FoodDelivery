@@ -4,21 +4,28 @@ import com.example.secondassignment.model.Address;
 import com.example.secondassignment.repository.AddressRepository;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
 import com.example.secondassignment.service.validators.AddressValidator;
-import com.example.secondassignment.service.validators.NameValidator;
-import com.example.secondassignment.service.validators.UserEmailValidator;
-import com.example.secondassignment.service.validators.UserPasswordValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
+/**
+ * Service class for the Address model.
+ */
 @Service
 public class AddressServiceImpl implements AddressService {
 
+    /**
+     * Repository of the address, used for accessing the Address table in the database.
+     */
     @Autowired
     private AddressRepository addressRepository;
 
+    /**
+     * Validates the fields of an address.
+     * @param address to be validated
+     * @return null if the Address is valid, or the respective error message if it is not
+     */
     public String validateAddress(Address address) {
         try {
             new AddressValidator().validate(address);
@@ -28,6 +35,12 @@ public class AddressServiceImpl implements AddressService {
         }
     }
 
+    /**
+     * Creates a new address in the database.
+     * @param address to be added in the database
+     * @return the saved address
+     * @throws InvalidDataException if the address to be saved is not valid
+     */
     @Override
     public Address save(Address address) throws InvalidDataException {
         String validationMsg = validateAddress(address);

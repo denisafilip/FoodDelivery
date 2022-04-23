@@ -1,20 +1,11 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import {Card, Table} from "react-bootstrap";
+import {Card, Table, Button} from "react-bootstrap";
 import "../../css/FormStyle.css";
 
 function ViewMenu() {
     const [foods, setFoods] = useState([]);
     const [foodCategories, setFoodCategories] = useState(JSON.parse(localStorage.getItem("foodCategories")));
-
-    /*useEffect(() => {
-        window.addEventListener('storage', () => {
-            setFoods(JSON.parse(localStorage.getItem("user")).restaurant.foods || [])   
-            window.location.reload();
-          });
-        console.log(foods);
-        console.log(localStorage.getItem("user"))
-    }, []);*/
 
     useEffect(() => {
         console.log(JSON.parse(localStorage.getItem("user")).restaurant.name)
@@ -30,9 +21,33 @@ function ViewMenu() {
         });
     }, []);
 
+    const exportToPDF = async() => {
+        axios
+        .request('http://localhost:8080/admin/viewMenu/export', {
+            params: {
+                restaurantName: JSON.parse(localStorage.getItem("user")).restaurant.name
+            }
+        })
+        .then(response => {
+            console.log(response.data);  
+        });
+    }
+
+    function handleSubmit(event) {
+        exportToPDF();
+        event.preventDefault();
+    }
+
     return (
         <div className="TableStyle">
         
+            <br/>
+            <br/>
+
+            <Button variant="primary" block size="lg" type="submit" onClick={handleSubmit}>
+                Export to PDF
+            </Button>
+
             <br/>
             <br/>
 

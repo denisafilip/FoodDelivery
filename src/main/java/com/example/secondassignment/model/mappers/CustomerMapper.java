@@ -4,16 +4,27 @@ import com.example.secondassignment.model.DTO.CustomerDTO;
 import com.example.secondassignment.model.Customer;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
-import java.util.stream.Collectors;
-
+/**
+ * Singleton class used for mapping a Customer to a CustomerDTO and vice-versa.
+ */
 public class CustomerMapper implements Mapper<Customer, CustomerDTO> {
 
+    /**
+     * Singleton instance of the CustomerMapper class.
+     */
     private static CustomerMapper customerMapper = null;
 
+    /**
+     * Constructor.
+     */
     private CustomerMapper() {
 
     }
 
+    /**
+     * Retrieves the single instance of the CustomerMapper class.
+     * @return the instance of the CustomerMapper class.
+     */
     public static CustomerMapper getInstance() {
         if (customerMapper == null) {
             customerMapper = new CustomerMapper();
