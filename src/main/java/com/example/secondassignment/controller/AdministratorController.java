@@ -4,16 +4,13 @@ import com.example.secondassignment.model.DTO.AdministratorDTO;
 import com.example.secondassignment.model.DTO.FoodDTO;
 import com.example.secondassignment.model.DTO.OrderDTO;
 import com.example.secondassignment.model.DTO.RestaurantDTO;
-import com.example.secondassignment.model.Restaurant;
 import com.example.secondassignment.model.mappers.AdministratorMapper;
 import com.example.secondassignment.model.Administrator;
 import com.example.secondassignment.model.Category;
 import com.example.secondassignment.model.Zone;
-import com.example.secondassignment.model.mappers.RestaurantMapper;
 import com.example.secondassignment.service.account.administrator.AdministratorServiceImpl;
 import com.example.secondassignment.service.account.exceptions.NoSuchAccountException;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
-import com.example.secondassignment.service.restaurant.PDFGenerator;
 import com.example.secondassignment.service.restaurant.exceptions.DuplicateFoodNameException;
 import com.example.secondassignment.service.restaurant.exceptions.NoSuchRestaurantException;
 import com.example.secondassignment.service.restaurant.food.FoodServiceImpl;
@@ -23,25 +20,19 @@ import com.example.secondassignment.service.restaurant.exceptions.DuplicateResta
 import com.example.secondassignment.service.address.zone.ZoneServiceImpl;
 import com.example.secondassignment.service.restaurant.order.OrderServiceImpl;
 import com.example.secondassignment.service.restaurant.order.ViewOrdersFacade;
-import com.sun.xml.internal.ws.client.sei.ResponseBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.*;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
+/**
+ * Controller that handles the operations of an administrator.
+ */
 @RestController
 @RequestMapping("/admin")
 public class AdministratorController {
@@ -111,7 +102,7 @@ public class AdministratorController {
 
     @PostMapping("/addFood")
     public ResponseEntity<FoodDTO> addFood(@RequestBody(required = false) FoodDTO foodDTO) throws InvalidDataException,
-            DuplicateFoodNameException {
+            DuplicateFoodNameException, NoSuchRestaurantException {
         return new ResponseEntity<>(foodService.save(foodDTO), HttpStatus.CREATED);
     }
 
@@ -122,6 +113,14 @@ public class AdministratorController {
     }
 
     //order operations
+
+    /**
+     * Gets all orders of a restaurant.
+     * @param restaurantName of the restaurant
+     * @return response received after the retrieval of the orders from the database
+     * @throws NoSuchRestaurantException If no restaurant with the given name is found.
+     * @throws InvalidDataException If the name of the restaurant is invalid
+     */
     @GetMapping("/viewOrders")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<List<OrderDTO>> getOrders(@Param("restaurantName") String restaurantName)
@@ -129,46 +128,59 @@ public class AdministratorController {
         return new ResponseEntity<>(viewOrdersFacade.findAllByRestaurantOrCustomer(null, restaurantName), HttpStatus.ACCEPTED);
     }
 
+    /**
+     * Marks the acceptance of an order
+     * @param orderDTO - details of the order that is accepted
+     * @return - response received after the status change of the delivery
+     * @throws InvalidDataException if the status change is invalid
+     */
     @PostMapping("/order/accept")
     public ResponseEntity<OrderDTO> acceptOrder(@RequestBody(required = false) OrderDTO orderDTO) throws InvalidDataException {
         return new ResponseEntity<>(orderService.acceptOrder(orderDTO), HttpStatus.CREATED);
     }
 
+    /**
+     * Marks the refusal of an order delivery
+     * @param orderDTO - details of the order that is declined
+     * @return - response received after the status change of the order
+     * @throws InvalidDataException if the status change is invalid
+     */
     @PostMapping("/order/decline")
     public ResponseEntity<OrderDTO> declineOrder(@RequestBody(required = false) OrderDTO orderDTO) throws InvalidDataException {
         return new ResponseEntity<>(orderService.declineOrder(orderDTO), HttpStatus.CREATED);
     }
 
+    /**
+     * Marks the start of a delivery
+     * @param orderDTO - details of the order whose delivery is started
+     * @return - response received after the status change of the delivery
+     * @throws InvalidDataException if the status change is invalid
+     */
     @PostMapping("/order/startDelivery")
     public ResponseEntity<OrderDTO> startDelivery(@RequestBody(required = false) OrderDTO orderDTO) throws InvalidDataException {
         return new ResponseEntity<>(orderService.startDelivery(orderDTO), HttpStatus.CREATED);
     }
 
+    /**
+     * Marks the end of a delivery
+     * @param orderDTO - details of the order whose delivery is finished
+     * @return - response received after the status change of the delivery
+     * @throws InvalidDataException if the status change is invalid
+     */
     @PostMapping("/order/endDelivery")
     public ResponseEntity<OrderDTO> endDelivery(@RequestBody(required = false) OrderDTO orderDTO) throws InvalidDataException {
         return new ResponseEntity<>(orderService.endDelivery(orderDTO), HttpStatus.CREATED);
     }
 
+    /**
+     * Exports the menu of a restaurant to a PDF file
+     * @param restaurantName of the restaurant whose menu is exported
+     * @return response received after exporting the menu
+     * @throws IOException if the PDF file is not found
+     */
     @RequestMapping("viewMenu/export")
     public ResponseEntity<InputStreamResource> generatePDF(@Param("restaurantName") String restaurantName) throws IOException {
-        Restaurant restaurant = restaurantService.findByName(restaurantName);
-        PDFGenerator generator = new PDFGenerator();
-        generator.setRestaurant(restaurant);
-        String path = generator.writeMenuToPDF();
-        File file = new File(path);
-        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
-
-        MediaType mediaType = MediaTypeFactory
-                .getMediaType(resource)
-                .orElse(MediaType.APPLICATION_OCTET_STREAM);
-
-        System.out.println(file.getName());
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(mediaType);
-        headers.setContentLength(file.length());
-        ContentDisposition disposition = ContentDisposition.attachment().filename(file.getName()).build();
-        headers.setContentDisposition(disposition);
-        return ResponseEntity.ok().headers(headers).body(resource);
+        return restaurantService.exportMenuToPDF(restaurantName);
     }
 
 }

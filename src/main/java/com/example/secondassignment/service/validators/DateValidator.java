@@ -4,8 +4,14 @@ import com.example.secondassignment.service.exceptions.InvalidDataException;
 
 import java.time.LocalDate;
 
+/**
+ * Validator of a date.
+ */
 public class DateValidator implements Validator {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void validate(Object obj) throws InvalidDataException {
         LocalDate date = (LocalDate) obj;

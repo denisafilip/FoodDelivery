@@ -19,6 +19,9 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * {@inheritDoc}
+ */
 @Service
 public class FoodServiceImpl implements FoodService {
 
@@ -28,6 +31,12 @@ public class FoodServiceImpl implements FoodService {
     @Autowired
     private RestaurantServiceImpl restaurantService;
 
+    /**
+     * Validates the details of a food item.
+     * @param name of the food item
+     * @param price of the food item
+     * @return an error message if the details are incorrect | null if they are correct
+     */
     public String validateFood(String name, Integer price) {
         try {
             new NameValidator().validate(name);
@@ -38,12 +47,18 @@ public class FoodServiceImpl implements FoodService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Food findByNameAndRestaurant(String name, Restaurant restaurant) {
         Optional<Food> food = foodRepository.findByNameAndRestaurant(name, restaurant);
         return food.orElse(null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<FoodDTO> findByRestaurant(String restaurantName) throws NoSuchRestaurantException {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
@@ -59,12 +74,15 @@ public class FoodServiceImpl implements FoodService {
                 .collect(Collectors.toList())).orElseGet(ArrayList::new);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public FoodDTO save(FoodDTO foodDTO) throws DuplicateFoodNameException, InvalidDataException {
+    public FoodDTO save(FoodDTO foodDTO) throws DuplicateFoodNameException, InvalidDataException, NoSuchRestaurantException {
         Restaurant restaurant = restaurantService.findByName(foodDTO.getRestaurantDTO().getName());
 
         if (restaurant == null) {
-            throw new NoSuchElementException("The restaurant with the name" + foodDTO.getRestaurantDTO().getName() + " does not exist!");
+            throw new NoSuchRestaurantException("The restaurant with the name" + foodDTO.getRestaurantDTO().getName() + " does not exist!");
         }
 
         if (this.findByNameAndRestaurant(foodDTO.getName(), restaurant) != null) {
@@ -83,8 +101,11 @@ public class FoodServiceImpl implements FoodService {
                 .category(foodDTO.getCategory())
                 .restaurant(restaurant)
                 .build();
+        System.out.println(food);
+        Food savedFood = foodRepository.save(food);
+        System.out.println(savedFood);
 
-        return FoodMapper.getInstance().convertToDTO(foodRepository.save(food));
+        return FoodMapper.getInstance().convertToDTO(savedFood);
     }
 
 

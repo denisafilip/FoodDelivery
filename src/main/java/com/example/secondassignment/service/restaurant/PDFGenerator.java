@@ -10,7 +10,6 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -33,10 +32,9 @@ public class PDFGenerator {
 
     /**
      *<p> writeMenuToPDF is responsible for exporting the menu of a restaurant to a PDF. </p>
+     * @return The path of the created PDF document.
      */
     public String writeMenuToPDF() {
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-
         try (PDDocument doc = new PDDocument()) {
 
             doc.addPage(currentPage);
@@ -59,6 +57,11 @@ public class PDFGenerator {
         }
     }
 
+    /**
+     * Writes the details of a restaurant to the PDF.
+     * @param contentStream with which the data is written to the PDF document
+     * @throws IOException If an error occurs during writing.
+     */
     private void writeRestaurantData(PDPageContentStream contentStream) throws IOException {
         contentStream.setFont(PDType1Font.TIMES_ROMAN, 14);
         contentStream.newLine();
@@ -73,6 +76,12 @@ public class PDFGenerator {
         contentStream.newLine();
     }
 
+    /**
+     * Writes the menu of the restaurant to the PDF document.
+     * @param doc to which the data is written
+     * @param contentStream with which the data is written to the PDF document
+     * @throws IOException If an error occurs during writing.
+     */
     private void writeMenuData(PDDocument doc, PDPageContentStream contentStream) throws IOException {
         contentStream.setFont(PDType1Font.TIMES_ROMAN, 15);
         contentStream.showText("The menu of the restaurant: ");
@@ -114,6 +123,12 @@ public class PDFGenerator {
 
     }
 
+    /**
+     * Centers the title of the PDF document.
+     * @param contentStream with which the data is written to the PDF document
+     * @param mediaBox: the shape of the PDF document.
+     * @throws IOException If an error occurs during writing.
+     */
     private void centerTitle(PDPageContentStream contentStream, PDRectangle mediaBox) throws IOException {
         String title = "RESTAURANT " + this.restaurant.getName();
         PDFont font = PDType1Font.TIMES_BOLD;

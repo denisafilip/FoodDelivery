@@ -8,17 +8,26 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * {@inheritDoc}
+ */
 @Service
 public class ZoneServiceImpl implements ZoneService {
 
     @Autowired
     private ZoneRepository zoneRepository;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Zone> findAll() {
         return zoneRepository.findAll();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Zone findByName(String name) {
         Optional<Zone> zone = zoneRepository.findByName(name);

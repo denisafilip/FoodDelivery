@@ -5,10 +5,16 @@ import com.example.secondassignment.service.exceptions.InvalidDataException;
 
 import java.util.regex.Pattern;
 
+/**
+ * Validator of an Address class.
+ */
 public class AddressValidator implements Validator {
     private static final String POSTAL_CODE_PATTERN = "[0-9-]+";
     private static final String STREET_NUMBER_PATTERN = "[0-9a-zA-Z-]+";
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void validate(Object obj) throws InvalidDataException {
         Pattern postal_code_pattern = Pattern.compile(POSTAL_CODE_PATTERN);

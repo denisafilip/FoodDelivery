@@ -1,5 +1,8 @@
 package com.example.secondassignment.service.restaurant.exceptions;
 
+/**
+ * Exception thrown when the name of a restaurant already exists in the database.
+ */
 public class DuplicateRestaurantNameException extends Exception {
 
     /**

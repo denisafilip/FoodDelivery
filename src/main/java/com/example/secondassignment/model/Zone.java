@@ -16,6 +16,8 @@ import java.util.List;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @ToString
+@Builder
+@AllArgsConstructor
 @Table(name = "zone")
 public class Zone {
 

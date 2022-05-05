@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Class that implements the methods for the user account management
+ */
 @Service
 public class AccountServiceImpl implements AccountService {
     @Autowired
@@ -25,6 +28,11 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private CustomerRepository customerRepository;
 
+    /**
+     * Retrieves an user account from the database by email
+     * @param email of the account
+     * @return the DTO of the retrieved account
+     */
     @Override
     public AccountDTO findByEmail(String email) {
         Optional<Administrator> administrator = administratorRepository.findByEmail(email);
@@ -32,10 +40,18 @@ public class AccountServiceImpl implements AccountService {
             return administrator.map(value -> AdministratorMapper.getInstance().convertToDTO(value)).orElse(null);
         } else {
             Optional<Customer> customer = customerRepository.findByEmail(email);
-            return customer.map(value -> CustomerMapper.getInstance().convertToDTO(value)).orElse(null);
+            if (customer.isPresent()) {
+                return customer.map(value -> CustomerMapper.getInstance().convertToDTO(value)).orElse(null);
+            }
         }
+        return null;
     }
 
+    /**
+     * Retrieves an user account from the database by email and password
+     * @param loginDTO containing the email and password of the account
+     * @return the DTO of the retrieved account
+     */
     @Override
     public AccountDTO getAccountDTO(LoginDTO loginDTO) throws NoSuchAccountException {
         AccountDTO accountDTO = this.findByEmail(loginDTO.getEmail());
@@ -43,13 +59,18 @@ public class AccountServiceImpl implements AccountService {
             throw new NoSuchAccountException("No account with this email was found.");
         }
         Account account = AccountMapper.getInstance().convertFromDTO(accountDTO);
-
         if (BCrypt.checkpw(loginDTO.getPassword(), account.getPassword())) {
             return accountDTO;
         }
         throw new NoSuchAccountException("The password for this email is incorrect!");
     }
 
+    /**
+     * Logins an account, by trying to match the given credentials with those from the database
+     * @param loginDTO containing the email and password of the account
+     * @return the DTO of the logged in account
+     */
+    @Override
     public AccountDTO logIn(LoginDTO loginDTO) throws NoSuchAccountException {
         return this.getAccountDTO(loginDTO);
     }

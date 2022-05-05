@@ -13,7 +13,6 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
@@ -61,7 +60,6 @@ public class Food {
      * Restaurant to which the food belongs.
      */
     @NonNull
-    @ToString.Exclude
     @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_restaurant")
     private Restaurant restaurant;
@@ -70,9 +68,14 @@ public class Food {
      * History of the orders in which the food was bought.
      */
     @JsonIgnore
-    @ToString.Exclude
     @ManyToMany(mappedBy = "foods")
     private List<Order> orders;
 
-
+    @Override
+    public String toString() {
+        return "Food item " + idFood +
+                ": " + name + "\n   description: " + description +
+                "\n   price: " + price +
+                "\n   category: " + category.getName();
+    }
 }

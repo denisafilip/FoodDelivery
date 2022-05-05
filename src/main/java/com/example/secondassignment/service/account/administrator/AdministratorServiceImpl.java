@@ -12,12 +12,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * {@inheritDoc}
+ */
 @Service
 public class AdministratorServiceImpl implements AdministratorService {
 
     @Autowired
     private AdministratorRepository administratorRepository;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Administrator save(Administrator administrator) {
         Administrator a = Administrator.AdminBuilder()
@@ -29,6 +35,9 @@ public class AdministratorServiceImpl implements AdministratorService {
         return administratorRepository.save(a);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<AdministratorDTO> findAll() {
         return administratorRepository.findAll().stream()
@@ -36,6 +45,9 @@ public class AdministratorServiceImpl implements AdministratorService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Administrator findByEmail(String email) {
         Optional<Administrator> administrator = administratorRepository.findByEmail(email);

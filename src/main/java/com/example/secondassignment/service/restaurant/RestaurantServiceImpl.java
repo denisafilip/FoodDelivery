@@ -16,11 +16,19 @@ import com.example.secondassignment.service.restaurant.exceptions.DuplicateResta
 import com.example.secondassignment.service.validators.NameValidator;
 import com.example.secondassignment.service.address.zone.ZoneServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * {@inheritDoc}
+ */
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
 
@@ -36,6 +44,11 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Autowired
     private ZoneServiceImpl zoneService;
 
+    /**
+     * Validates the name of a restaurant, before its creation.
+     * @param name of the restaurant
+     * @return null if the name is valid, an error message if it is not
+     */
     public String validateRestaurant(String name) {
         try {
             new NameValidator().validate(name);
@@ -45,12 +58,18 @@ public class RestaurantServiceImpl implements RestaurantService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Restaurant findByName(String name) {
         Optional<Restaurant> restaurant = restaurantRepository.findByName(name);
         return restaurant.orElse(null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RestaurantDTO save(RestaurantDTO restaurantDTO) throws InvalidDataException, DuplicateRestaurantNameException, NoSuchAccountException {
         if (this.findByName(restaurantDTO.getName()) != null) {
@@ -83,10 +102,14 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .administrator(administrator)
                 .deliveryZones(zones)
                 .build();
+        System.out.println(restaurant);
 
         return RestaurantMapper.getInstance().convertToDTO(restaurantRepository.save(restaurant));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<RestaurantDTO> findAll() {
         return restaurantRepository.findAll().stream()
@@ -94,6 +117,9 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String delete(Integer id) {
         Optional<Restaurant> restaurant = restaurantRepository.findById(id);
@@ -105,5 +131,27 @@ public class RestaurantServiceImpl implements RestaurantService {
         else return "There was no restaurant to delete!";
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ResponseEntity<InputStreamResource> exportMenuToPDF(String restaurantName) throws FileNotFoundException {
+        Restaurant restaurant = this.findByName(restaurantName);
+        PDFGenerator generator = new PDFGenerator();
+        generator.setRestaurant(restaurant);
+        String path = generator.writeMenuToPDF();
+        File file = new File(path);
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(file));
 
+        MediaType mediaType = MediaTypeFactory
+                .getMediaType(resource)
+                .orElse(MediaType.APPLICATION_OCTET_STREAM);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(mediaType);
+        headers.setContentLength(file.length());
+        ContentDisposition disposition = ContentDisposition.attachment().filename(file.getName()).build();
+        headers.setContentDisposition(disposition);
+        return ResponseEntity.ok().headers(headers).body(resource);
+    }
 }

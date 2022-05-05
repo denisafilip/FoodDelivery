@@ -1,5 +1,8 @@
 package com.example.secondassignment.service.restaurant.exceptions;
 
+/**
+ * Exception thrown when a restaurant does not exist already in the database.
+ */
 public class NoSuchRestaurantException extends Exception {
 
     /**

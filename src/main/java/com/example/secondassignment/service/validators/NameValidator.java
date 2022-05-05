@@ -4,6 +4,9 @@ import com.example.secondassignment.service.exceptions.InvalidDataException;
 
 import java.util.regex.Pattern;
 
+/**
+ * Validator of a name.
+ */
 public class NameValidator implements Validator {
     private static final String NAME_PATTERN = "[a-zA-Z- ăîâșț]+";
 

@@ -14,7 +14,6 @@ public class AddressDTO {
     private String street;
     private String number;
     private String city;
-    private String county;
     private Zone zone;
     private String country;
     private String postalCode;

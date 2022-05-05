@@ -7,13 +7,18 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * {@inheritDoc}
+ */
 @Service
 public class FoodCategoryServiceImpl implements FoodCategoryService {
 
     @Autowired
     private FoodCategoryRepository foodCategoryRepository;
 
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Category> findAll() {
         return foodCategoryRepository.findAll();

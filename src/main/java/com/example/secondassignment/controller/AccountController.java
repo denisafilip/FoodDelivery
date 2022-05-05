@@ -15,6 +15,11 @@ public class AccountController {
     @Autowired
     private AccountServiceImpl accountService;
 
+    /**
+     * Logins an account on the platform
+     * @param loginDTO - credentials of the current account
+     * @return response received after account log in
+     */
     @PostMapping("")
     public ResponseEntity<AccountDTO> login(@RequestBody(required = false) LoginDTO loginDTO) {
         return new ResponseEntity<>(accountService.logIn(loginDTO), HttpStatus.CREATED);

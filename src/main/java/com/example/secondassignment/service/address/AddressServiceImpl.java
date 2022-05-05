@@ -36,10 +36,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     /**
-     * Creates a new address in the database.
-     * @param address to be added in the database
-     * @return the saved address
-     * @throws InvalidDataException if the address to be saved is not valid
+     * {@inheritDoc}
      */
     @Override
     public Address save(Address address) throws InvalidDataException {

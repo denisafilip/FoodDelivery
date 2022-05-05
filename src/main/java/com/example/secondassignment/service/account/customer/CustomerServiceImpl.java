@@ -12,12 +12,16 @@ import com.example.secondassignment.service.validators.NameValidator;
 import com.example.secondassignment.service.validators.UserEmailValidator;
 import com.example.secondassignment.service.validators.UserPasswordValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * {@inheritDoc}
+ */
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
@@ -27,6 +31,14 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private AddressService addressService;
 
+    /**
+     * Validates the details of a customer
+     * @param firstName of the customer
+     * @param lastName of the customer
+     * @param email of the customer
+     * @param password of the customer
+     * @return null if the details are valid | error message if they are invalid
+     */
     public String validateCustomer(String firstName, String lastName, String email, String password) {
         try {
             new NameValidator().validate(firstName);
@@ -35,16 +47,22 @@ public class CustomerServiceImpl implements CustomerService {
             new UserPasswordValidator().validate(password);
             return null;
         } catch (InvalidDataException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return e.getMessage();
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Customer save(Customer customer) {
         return customerRepository.save(customer);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<CustomerDTO> findAll() {
         return customerRepository.findAll().stream()
@@ -52,6 +70,9 @@ public class CustomerServiceImpl implements CustomerService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Customer findByEmail(String email) {
         Optional<Customer> customer = customerRepository.findByEmail(email);
@@ -59,6 +80,9 @@ public class CustomerServiceImpl implements CustomerService {
         return customer.orElse(null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CustomerDTO register(CustomerDTO customerDTO) throws InvalidDataException, DuplicateEmailException {
         String validationMsg = validateCustomer(customerDTO.getFirstName(), customerDTO.getLastName(),
@@ -69,6 +93,7 @@ public class CustomerServiceImpl implements CustomerService {
         Address address = addressService.save(customerDTO.getAddress());
 
         Optional<Customer> _customer = customerRepository.findByEmail(customerDTO.getEmail());
+
         if (_customer.isPresent()) {
             throw new DuplicateEmailException("A customer with that email already exists!");
         }

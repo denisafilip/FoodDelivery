@@ -2,14 +2,12 @@ package com.example.secondassignment.service.restaurant.order;
 
 import com.example.secondassignment.model.*;
 import com.example.secondassignment.model.DTO.*;
-import com.example.secondassignment.model.mappers.FoodMapper;
 import com.example.secondassignment.model.mappers.OrderMapper;
 import com.example.secondassignment.repository.OrderRepository;
 import com.example.secondassignment.service.account.customer.CustomerServiceImpl;
 import com.example.secondassignment.service.account.exceptions.NoSuchAccountException;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
 import com.example.secondassignment.service.restaurant.RestaurantServiceImpl;
-import com.example.secondassignment.service.restaurant.exceptions.DuplicateRestaurantNameException;
 import com.example.secondassignment.service.restaurant.exceptions.NoSuchRestaurantException;
 import com.example.secondassignment.service.restaurant.food.FoodServiceImpl;
 import com.example.secondassignment.service.restaurant.order.status.*;
@@ -20,6 +18,9 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * {@inheritDoc}
+ */
 @Service
 public class OrderServiceImpl implements OrderService {
 
@@ -35,6 +36,12 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private FoodServiceImpl foodService;
 
+    @Autowired
+    private EmailService emailService;
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public OrderDTO save(OrderDTO orderDTO) throws InvalidDataException {
         Customer customer = customerService.findByEmail(orderDTO.getCustomer().getEmail());
@@ -69,9 +76,13 @@ public class OrderServiceImpl implements OrderService {
                 .total(foods.stream().mapToInt(Food::getPrice).sum())
                 .build();
         Order savedOrder = orderRepository.save(order);
+        emailService.sendOrderEmail(savedOrder);
         return OrderMapper.getInstance().convertToDTO(savedOrder);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<OrderDTO> findAll() {
         return orderRepository.findAll().stream()
@@ -79,6 +90,9 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<OrderDTO> findAllByStatus(OrderStatus status) {
         Optional<List<Order>> orders = orderRepository.findAllByStatus(status);
@@ -88,6 +102,9 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList())).orElseGet(ArrayList::new);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<OrderDTO> findAllByCustomer(CustomerDTO customerDTO) {
         Customer customer = customerService.findByEmail(customerDTO.getEmail());
@@ -99,6 +116,9 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList())).orElseGet(ArrayList::new);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<OrderDTO> findAllByRestaurant(RestaurantDTO restaurantDTO) {
         Restaurant restaurant = restaurantService.findByName(restaurantDTO.getName());
@@ -110,6 +130,9 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList())).orElseGet(ArrayList::new);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<OrderDTO> findAllByRestaurantAndStatus(RestaurantDTO restaurantDTO, OrderStatus status) {
         Restaurant restaurant = restaurantService.findByName(restaurantDTO.getName());
@@ -121,6 +144,9 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList())).orElseGet(ArrayList::new);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<OrderDTO> findAllByRestaurantName(String restaurantName) throws NoSuchRestaurantException {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
@@ -136,6 +162,9 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList())).orElseGet(ArrayList::new);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<OrderDTO> findAllByCustomerEmail(String customerEmail) throws NoSuchAccountException {
         Customer customer = customerService.findByEmail(customerEmail);
@@ -151,6 +180,9 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList())).orElseGet(ArrayList::new);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public OrderDTO updateOrderStatus(OrderStatus orderStatus, OrderDTO orderDTO) throws InvalidDataException {
         OrderState orderState;
@@ -177,21 +209,33 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public OrderDTO acceptOrder(OrderDTO orderDTO) throws InvalidDataException {
         return updateOrderStatus(OrderStatus.ACCEPTED, orderDTO);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public OrderDTO declineOrder(OrderDTO orderDTO) throws InvalidDataException {
         return updateOrderStatus(OrderStatus.DECLINED, orderDTO);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public OrderDTO startDelivery(OrderDTO orderDTO) throws InvalidDataException {
         return updateOrderStatus(OrderStatus.IN_DELIVERY, orderDTO);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public OrderDTO endDelivery(OrderDTO orderDTO) throws InvalidDataException {
         return updateOrderStatus(OrderStatus.DELIVERED, orderDTO);

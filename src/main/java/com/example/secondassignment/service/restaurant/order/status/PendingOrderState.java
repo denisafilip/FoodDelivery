@@ -6,11 +6,17 @@ import lombok.Getter;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Class for the Pending order status
+ */
 @Getter
 public class PendingOrderState implements OrderState {
 
     private final OrderStatus orderStatus = OrderStatus.PENDING;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Set<OrderStatus> getNextStatuses() {
         Set<OrderStatus> nextStates = new HashSet<>();
