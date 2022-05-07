@@ -125,7 +125,7 @@ function AddRestaurant() {
           .catch((error) => console.error("There was an error when adding food!", error));
 
         axios
-            .get('http://localhost:8080/customer/viewRestaurants')
+            .get('http://localhost:8080/getRestaurants')
             .then(response => {
                 localStorage.setItem('restaurants', JSON.stringify(response.data));
                 navigate("/admin/addFood");

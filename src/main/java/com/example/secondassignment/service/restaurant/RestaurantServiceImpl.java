@@ -15,6 +15,8 @@ import com.example.secondassignment.service.exceptions.InvalidDataException;
 import com.example.secondassignment.service.restaurant.exceptions.DuplicateRestaurantNameException;
 import com.example.secondassignment.service.validators.NameValidator;
 import com.example.secondassignment.service.address.zone.ZoneServiceImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
@@ -43,6 +45,8 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Autowired
     private ZoneServiceImpl zoneService;
+
+    private final static Logger logger = LogManager.getLogger(RestaurantServiceImpl.class.getName());
 
     /**
      * Validates the name of a restaurant, before its creation.
@@ -102,6 +106,7 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .administrator(administrator)
                 .deliveryZones(zones)
                 .build();
+        logger.info("Added restaurant {}", restaurant);
         System.out.println(restaurant);
 
         return RestaurantMapper.getInstance().convertToDTO(restaurantRepository.save(restaurant));

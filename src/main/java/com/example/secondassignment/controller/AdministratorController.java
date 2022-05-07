@@ -6,24 +6,21 @@ import com.example.secondassignment.model.DTO.OrderDTO;
 import com.example.secondassignment.model.DTO.RestaurantDTO;
 import com.example.secondassignment.model.mappers.AdministratorMapper;
 import com.example.secondassignment.model.Administrator;
-import com.example.secondassignment.model.Category;
-import com.example.secondassignment.model.Zone;
 import com.example.secondassignment.service.account.administrator.AdministratorServiceImpl;
 import com.example.secondassignment.service.account.exceptions.NoSuchAccountException;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
 import com.example.secondassignment.service.restaurant.exceptions.DuplicateFoodNameException;
 import com.example.secondassignment.service.restaurant.exceptions.NoSuchRestaurantException;
 import com.example.secondassignment.service.restaurant.food.FoodServiceImpl;
-import com.example.secondassignment.service.restaurant.food.category.FoodCategoryServiceImpl;
 import com.example.secondassignment.service.restaurant.RestaurantServiceImpl;
 import com.example.secondassignment.service.restaurant.exceptions.DuplicateRestaurantNameException;
-import com.example.secondassignment.service.address.zone.ZoneServiceImpl;
 import com.example.secondassignment.service.restaurant.order.OrderServiceImpl;
 import com.example.secondassignment.service.restaurant.order.ViewOrdersFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,12 +41,6 @@ public class AdministratorController {
     private RestaurantServiceImpl restaurantService;
 
     @Autowired
-    private ZoneServiceImpl zoneService;
-
-    @Autowired
-    private FoodCategoryServiceImpl foodCategoryService;
-
-    @Autowired
     private FoodServiceImpl foodService;
 
     @Autowired
@@ -65,42 +56,28 @@ public class AdministratorController {
     }
 
     @GetMapping("/get")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public AdministratorDTO getCurrentAdministrator(@Param("adminEmail") String adminEmail) {
         return AdministratorMapper.getInstance().convertToDTO(administratorService.findByEmail(adminEmail));
     }
 
     @PostMapping("/save")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<AdministratorDTO> save(@Validated @RequestBody Administrator administrator) {
         return new ResponseEntity<>(AdministratorMapper.getInstance().convertToDTO(administratorService.save(administrator)),
                     HttpStatus.CREATED);
     }
 
-    //restaurant operations
-    @GetMapping("/addRestaurant")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<List<Zone>> getZones() {
-        try {
-            return new ResponseEntity<>(zoneService.findAll(), HttpStatus.ACCEPTED);
-        } catch (Exception exception) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_ACCEPTABLE);
-        }
-    }
-
     @PostMapping("/addRestaurant")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<RestaurantDTO> addRestaurant(@RequestBody(required = false) RestaurantDTO restaurantDTO) throws
             InvalidDataException, DuplicateRestaurantNameException, NoSuchAccountException {
         return new ResponseEntity<>(restaurantService.save(restaurantDTO), HttpStatus.CREATED);
     }
 
-    //food operations
-    @GetMapping("/addFood")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<List<Category>> getFoodCategories() {
-        return new ResponseEntity<>(foodCategoryService.findAll(), HttpStatus.ACCEPTED);
-    }
-
     @PostMapping("/addFood")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<FoodDTO> addFood(@RequestBody(required = false) FoodDTO foodDTO) throws InvalidDataException,
             DuplicateFoodNameException, NoSuchRestaurantException {
         return new ResponseEntity<>(foodService.save(foodDTO), HttpStatus.CREATED);
@@ -122,6 +99,7 @@ public class AdministratorController {
      * @throws InvalidDataException If the name of the restaurant is invalid
      */
     @GetMapping("/viewOrders")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<List<OrderDTO>> getOrders(@Param("restaurantName") String restaurantName)
             throws NoSuchRestaurantException, InvalidDataException {
@@ -135,6 +113,7 @@ public class AdministratorController {
      * @throws InvalidDataException if the status change is invalid
      */
     @PostMapping("/order/accept")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<OrderDTO> acceptOrder(@RequestBody(required = false) OrderDTO orderDTO) throws InvalidDataException {
         return new ResponseEntity<>(orderService.acceptOrder(orderDTO), HttpStatus.CREATED);
     }
@@ -146,6 +125,7 @@ public class AdministratorController {
      * @throws InvalidDataException if the status change is invalid
      */
     @PostMapping("/order/decline")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<OrderDTO> declineOrder(@RequestBody(required = false) OrderDTO orderDTO) throws InvalidDataException {
         return new ResponseEntity<>(orderService.declineOrder(orderDTO), HttpStatus.CREATED);
     }
@@ -157,6 +137,7 @@ public class AdministratorController {
      * @throws InvalidDataException if the status change is invalid
      */
     @PostMapping("/order/startDelivery")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<OrderDTO> startDelivery(@RequestBody(required = false) OrderDTO orderDTO) throws InvalidDataException {
         return new ResponseEntity<>(orderService.startDelivery(orderDTO), HttpStatus.CREATED);
     }
@@ -168,6 +149,7 @@ public class AdministratorController {
      * @throws InvalidDataException if the status change is invalid
      */
     @PostMapping("/order/endDelivery")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<OrderDTO> endDelivery(@RequestBody(required = false) OrderDTO orderDTO) throws InvalidDataException {
         return new ResponseEntity<>(orderService.endDelivery(orderDTO), HttpStatus.CREATED);
     }
@@ -179,6 +161,7 @@ public class AdministratorController {
      * @throws IOException if the PDF file is not found
      */
     @RequestMapping("viewMenu/export")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<InputStreamResource> generatePDF(@Param("restaurantName") String restaurantName) throws IOException {
         return restaurantService.exportMenuToPDF(restaurantName);
     }

@@ -1,6 +1,5 @@
 package com.example.secondassignment.repository;
 
-import com.example.secondassignment.model.Administrator;
 import com.example.secondassignment.model.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 

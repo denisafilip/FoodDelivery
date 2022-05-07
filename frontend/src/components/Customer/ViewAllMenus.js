@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {Card, Table, Button, Modal} from "react-bootstrap";
 import "../../css/FormStyle.css";
 import axios from "axios";
+import authHeader from "../AuthHeader";
 
 function ViewAllMenus() {
     const [restaurants, setRestaurants] = useState(JSON.parse(localStorage.getItem("restaurants")));
@@ -53,6 +54,7 @@ function ViewAllMenus() {
     const getFoods = async(restaurantName) => {
         axios
         .get('http://localhost:8080/admin/viewMenu', {
+            headers: authHeader(),
             params: {
                 restaurantName: restaurantName
             }
@@ -75,6 +77,7 @@ function ViewAllMenus() {
         await placeOrder();
         axios
           .get("http://localhost:8080/customer/get", {
+              headers: authHeader(),
               params: {
                   customerEmail: customer.email
               }
@@ -100,7 +103,7 @@ function ViewAllMenus() {
 
     const placeOrder = async() => {
         await axios
-        .post("http://localhost:8080/customer/viewMenu", {...order, restaurant: currentRestaurant, foods: addedFoods})
+        .post("http://localhost:8080/customer/viewMenu", {...order, restaurant: currentRestaurant, foods: addedFoods}, {headers: authHeader()})
         .then((response) => {
               alert("You placed an order for the restaurant " + currentRestaurant.name + "!");
               setOrder({

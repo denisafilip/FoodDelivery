@@ -7,7 +7,6 @@ import com.example.secondassignment.service.account.customer.CustomerServiceImpl
 import com.example.secondassignment.service.account.exceptions.DuplicateEmailException;
 import com.example.secondassignment.service.address.zone.ZoneServiceImpl;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
-import com.example.secondassignment.service.restaurant.RestaurantServiceImpl;
 import com.example.secondassignment.service.restaurant.exceptions.NoSuchRestaurantException;
 import com.example.secondassignment.service.restaurant.order.OrderServiceImpl;
 import com.example.secondassignment.service.restaurant.order.ViewOrdersFacade;
@@ -15,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,9 +33,6 @@ public class CustomerController {
     private ZoneServiceImpl zoneService;
 
     @Autowired
-    private RestaurantServiceImpl restaurantService;
-
-    @Autowired
     private ViewOrdersFacade viewOrdersFacade;
 
     @PostMapping("/register")
@@ -45,8 +42,10 @@ public class CustomerController {
     }
 
     @GetMapping("/get")
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public CustomerDTO getCurrentCustomer(@Param("customerEmail") String customerEmail) {
+        System.out.println(customerEmail);
         return CustomerMapper.getInstance().convertToDTO(customerService.findByEmail(customerEmail));
     }
 
@@ -60,13 +59,8 @@ public class CustomerController {
         }
     }
 
-    @GetMapping("/viewRestaurants")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseEntity<List<RestaurantDTO>> findRestaurants() {
-        return new ResponseEntity<>(restaurantService.findAll(), HttpStatus.ACCEPTED);
-    }
-
     @GetMapping("/viewOrderHistory")
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<List<OrderDTO>> getOrders(@Param("customerEmail") String customerEmail)
             throws NoSuchRestaurantException, InvalidDataException {
@@ -74,6 +68,7 @@ public class CustomerController {
     }
 
     @PostMapping("/viewMenu")
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     public ResponseEntity<OrderDTO> placeOrder(@RequestBody(required = false) OrderDTO orderDTO) throws InvalidDataException {
         return new ResponseEntity<>(orderService.save(orderDTO), HttpStatus.ACCEPTED);
     }

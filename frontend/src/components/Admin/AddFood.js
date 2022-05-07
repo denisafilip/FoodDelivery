@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {Form, Button, Card, Alert} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import authHeader from "../AuthHeader";
 import "../../css/FormStyle.css";
 
 function AddFood() {
@@ -50,7 +51,7 @@ function AddFood() {
 
     const addFood = async() => {
         await axios
-          .post("http://localhost:8080/admin/addFood", foodInfo)
+          .post("http://localhost:8080/admin/addFood", foodInfo, {headers: authHeader()})
           .then((response) => {
                 alert("Success! You added the food " + foodInfo.name + "!");
                 setFoodInfo({
@@ -73,6 +74,7 @@ function AddFood() {
         await addFood();
         axios
           .get("http://localhost:8080/admin/get", {
+              headers: authHeader(),
               params: {
                   adminEmail: admin.email
               }

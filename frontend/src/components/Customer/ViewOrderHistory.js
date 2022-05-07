@@ -2,6 +2,7 @@ import React, {useState, useEffect} from "react";
 import {Card, Table} from "react-bootstrap";
 import "../../css/FormStyle.css";
 import axios from "axios";
+import authHeader from "../AuthHeader";
 
 function ViewOrderHistory() {
     const [customer, setCustomer] = useState(JSON.parse(localStorage.getItem("user")));
@@ -16,6 +17,7 @@ function ViewOrderHistory() {
     useEffect(() => {
         axios
         .get('http://localhost:8080/customer/viewOrderHistory', {
+            headers: authHeader(),
             params: {
                 customerEmail: customer.email
             }

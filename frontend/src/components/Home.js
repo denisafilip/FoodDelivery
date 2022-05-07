@@ -7,7 +7,7 @@ import axios from "axios";
 export default function Home () {
 
     axios
-        .get('http://localhost:8080/admin/addRestaurant')
+        .get('http://localhost:8080/getZones')
         .then(response => {
             localStorage.setItem('zones', JSON.stringify(response.data));
         });

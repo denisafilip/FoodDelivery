@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {Form, Button,} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import AuthService from "./AuthService";
 import "../css/FormStyle.css";
 import axios from "axios";
 
@@ -102,6 +103,7 @@ function Register() {
     }
 
     const registerCustomer = async(userInfo) => {
+        //AuthService.register(userInfo)
         await axios
           .post("http://localhost:8080/customer/register", userInfo)
           .then((response) => {

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import {Card, Table, Button} from "react-bootstrap";
 import "../../css/FormStyle.css";
+import authHeader from "../AuthHeader";
 
 function ViewMenu() {
     const [foods, setFoods] = useState([]);
@@ -11,6 +12,7 @@ function ViewMenu() {
         console.log(JSON.parse(localStorage.getItem("user")).restaurant.name)
         axios
         .get('http://localhost:8080/admin/viewMenu', {
+            headers: authHeader(),
             params: {
                 restaurantName: JSON.parse(localStorage.getItem("user")).restaurant.name
             }
@@ -24,6 +26,7 @@ function ViewMenu() {
     const exportToPDF = async() => {
         axios
         .request('http://localhost:8080/admin/viewMenu/export', {
+            headers: authHeader(),
             params: {
                 restaurantName: JSON.parse(localStorage.getItem("user")).restaurant.name
             }

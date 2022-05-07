@@ -1,5 +1,6 @@
 package com.example.secondassignment.model.DTO;
 
+import com.example.secondassignment.model.AccountRole;
 import lombok.*;
 
 @Getter

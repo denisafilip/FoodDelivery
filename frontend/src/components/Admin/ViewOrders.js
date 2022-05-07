@@ -2,6 +2,7 @@ import React, {useState, useEffect, useCallback} from "react";
 import {Card, Table, Button, Form} from "react-bootstrap";
 import "../../css/FormStyle.css";
 import axios from "axios";
+import authHeader from "../AuthHeader";
 
 function ViewOrders() {
     const [admin, setAdmin] = useState(JSON.parse(localStorage.getItem("user")));
@@ -20,7 +21,7 @@ function ViewOrders() {
         if (isSending) return;
         setIsSending(true);
         await axios
-          .post("http://localhost:8080/admin/order/accept", order)
+          .post("http://localhost:8080/admin/order/accept", order, {headers: authHeader()})
           .then((response) => {
               console.info(response.data);
           })
@@ -36,7 +37,7 @@ function ViewOrders() {
         if (isSending) return
         setIsSending(true)
         await axios
-          .post("http://localhost:8080/admin/order/decline", order)
+          .post("http://localhost:8080/admin/order/decline", order, {headers: authHeader()})
           .then((response) => {
               console.info(response.data);
           })
@@ -52,7 +53,7 @@ function ViewOrders() {
         if (isSending) return
         setIsSending(true)
         await axios
-          .post("http://localhost:8080/admin/order/startDelivery", order)
+          .post("http://localhost:8080/admin/order/startDelivery", order, {headers: authHeader()})
           .then((response) => {
               console.info(response.data);
           })
@@ -68,7 +69,7 @@ function ViewOrders() {
         if (isSending) return
         setIsSending(true)
         await axios
-          .post("http://localhost:8080/admin/order/endDelivery", order)
+          .post("http://localhost:8080/admin/order/endDelivery", order, {headers: authHeader()})
           .then((response) => {
               console.info(response.data);
           })
@@ -83,6 +84,7 @@ function ViewOrders() {
     const updateOrders = async() => {
         await axios
             .get('http://localhost:8080/admin/viewOrders', {
+                headers: authHeader(),
                 params: {
                     restaurantName: JSON.parse(localStorage.getItem("user")).restaurant.name
                 }
