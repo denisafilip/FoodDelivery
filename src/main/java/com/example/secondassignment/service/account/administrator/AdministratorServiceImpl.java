@@ -4,6 +4,8 @@ import com.example.secondassignment.model.DTO.AdministratorDTO;
 import com.example.secondassignment.model.mappers.AdministratorMapper;
 import com.example.secondassignment.model.Administrator;
 import com.example.secondassignment.repository.AdministratorRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class AdministratorServiceImpl implements AdministratorService {
+
+    private final static Logger logger = LoggerFactory.getLogger(AdministratorServiceImpl.class.getName());
 
     @Autowired
     private AdministratorRepository administratorRepository;
@@ -40,6 +44,7 @@ public class AdministratorServiceImpl implements AdministratorService {
      */
     @Override
     public List<AdministratorDTO> findAll() {
+        logger.info("Retrieve all administrators from the database");
         return administratorRepository.findAll().stream()
                 .map(AdministratorMapper.getInstance()::convertToDTO)
                 .collect(Collectors.toList());

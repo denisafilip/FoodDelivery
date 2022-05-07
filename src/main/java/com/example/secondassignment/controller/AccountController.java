@@ -10,14 +10,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/login")
 public class AccountController {
 
-    private final static Logger logger = LogManager.getLogger(AccountController.class.getName());
+    private final static Logger logger = LoggerFactory.getLogger(AccountController.class.getName());
 
     @Autowired
     private AccountServiceImpl accountService;

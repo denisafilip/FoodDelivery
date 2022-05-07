@@ -11,6 +11,8 @@ import com.example.secondassignment.service.restaurant.RestaurantServiceImpl;
 import com.example.secondassignment.service.restaurant.exceptions.NoSuchRestaurantException;
 import com.example.secondassignment.service.restaurant.food.FoodServiceImpl;
 import com.example.secondassignment.service.restaurant.order.status.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,8 @@ import java.util.stream.Collectors;
  */
 @Service
 public class OrderServiceImpl implements OrderService {
+
+    private final static Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class.getName());
 
     @Autowired
     private OrderRepository orderRepository;
@@ -44,20 +48,27 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public OrderDTO save(OrderDTO orderDTO) throws InvalidDataException {
+        logger.info("Create order {}", orderDTO);
         Customer customer = customerService.findByEmail(orderDTO.getCustomer().getEmail());
 
         if (customer == null) {
+            logger.error("No suitable customer was found when placing the order.");
             throw new InvalidDataException("No suitable customer was found when placing the order.");
         }
 
         Restaurant restaurant = restaurantService.findByName(orderDTO.getRestaurant().getName());
 
         if (restaurant == null) {
+            logger.error("No suitable restaurant was found when placing the order.");
             throw new InvalidDataException("No suitable restaurant was found when placing the order.");
         }
 
-        if(!restaurant.getDeliveryZones().contains(customer.getAddress().getZone()))
+        if (!restaurant.getDeliveryZones().contains(customer.getAddress().getZone())) {
+            logger.error("The restaurant {} does not deliver food to the zone {}",
+                    restaurant.getName(),
+                    customer.getAddress().getZone().getName());
             throw new InvalidDataException("Sorry! The restaurant " + restaurant.getName() + " does not deliver food to your address!");
+        }
 
         List<Food> foods = new ArrayList<>();
         for (FoodDTO foodDTO : orderDTO.getFoods()) {

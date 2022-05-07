@@ -1,5 +1,6 @@
 package com.example.secondassignment.service.account;
 
+import com.example.secondassignment.controller.AccountController;
 import com.example.secondassignment.model.DTO.AccountDTO;
 import com.example.secondassignment.model.DTO.LoginDTO;
 import com.example.secondassignment.model.mappers.AccountMapper;
@@ -11,6 +12,8 @@ import com.example.secondassignment.model.Customer;
 import com.example.secondassignment.repository.AdministratorRepository;
 import com.example.secondassignment.repository.CustomerRepository;
 import com.example.secondassignment.service.account.exceptions.NoSuchAccountException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,8 @@ import java.util.Optional;
  */
 @Service
 public class AccountServiceImpl implements AccountService {
+    private final static Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class.getName());
+
     @Autowired
     private AdministratorRepository administratorRepository;
 
@@ -35,6 +40,7 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public AccountDTO findByEmail(String email) {
+        logger.info("Get account with email {}", email);
         Optional<Administrator> administrator = administratorRepository.findByEmail(email);
         if (administrator.isPresent()) {
             return administrator.map(value -> AdministratorMapper.getInstance().convertToDTO(value)).orElse(null);
@@ -56,12 +62,14 @@ public class AccountServiceImpl implements AccountService {
     public AccountDTO getAccountDTO(LoginDTO loginDTO) throws NoSuchAccountException {
         AccountDTO accountDTO = this.findByEmail(loginDTO.getEmail());
         if (accountDTO == null) {
+            logger.warn("No account with email {} was found", loginDTO.getEmail());
             throw new NoSuchAccountException("No account with this email was found.");
         }
         Account account = AccountMapper.getInstance().convertFromDTO(accountDTO);
         if (BCrypt.checkpw(loginDTO.getPassword(), account.getPassword())) {
             return accountDTO;
         }
+        logger.warn("The password for the email {} is incorrect!", loginDTO.getEmail());
         throw new NoSuchAccountException("The password for this email is incorrect!");
     }
 

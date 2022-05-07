@@ -8,8 +8,11 @@ import com.example.secondassignment.service.exceptions.InvalidDataException;
 import com.example.secondassignment.service.restaurant.RestaurantServiceImpl;
 import com.example.secondassignment.service.restaurant.exceptions.DuplicateFoodNameException;
 import com.example.secondassignment.service.restaurant.exceptions.NoSuchRestaurantException;
+import com.example.secondassignment.service.restaurant.order.OrderServiceImpl;
 import com.example.secondassignment.service.validators.NameValidator;
 import com.example.secondassignment.service.validators.NumberValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,8 @@ import java.util.stream.Collectors;
 @Service
 public class FoodServiceImpl implements FoodService {
 
+    private final static Logger logger = LoggerFactory.getLogger(FoodServiceImpl.class.getName());
+
     @Autowired
     private FoodRepository foodRepository;
 
@@ -39,10 +44,12 @@ public class FoodServiceImpl implements FoodService {
      */
     public String validateFood(String name, Integer price) {
         try {
+            logger.info("Validate name {} and price {} of food", name, price);
             new NameValidator().validate(name);
             new NumberValidator().validate(price);
             return null;
         } catch (InvalidDataException e) {
+            logger.error(e.getMessage());
             return e.getMessage();
         }
     }
@@ -52,6 +59,7 @@ public class FoodServiceImpl implements FoodService {
      */
     @Override
     public Food findByNameAndRestaurant(String name, Restaurant restaurant) {
+        logger.info("Retrieve food with name {}, from restaurant {}", name, restaurant.getName());
         Optional<Food> food = foodRepository.findByNameAndRestaurant(name, restaurant);
         return food.orElse(null);
     }
@@ -64,6 +72,7 @@ public class FoodServiceImpl implements FoodService {
         Restaurant restaurant = restaurantService.findByName(restaurantName);
 
         if (restaurant == null) {
+            logger.error("No restaurant with name {} was found", restaurantName);
             throw new NoSuchRestaurantException("No restaurant with the name " + restaurantName + " exists.");
         }
 
@@ -79,13 +88,16 @@ public class FoodServiceImpl implements FoodService {
      */
     @Override
     public FoodDTO save(FoodDTO foodDTO) throws DuplicateFoodNameException, InvalidDataException, NoSuchRestaurantException {
+        logger.info("Create food {}", foodDTO);
         Restaurant restaurant = restaurantService.findByName(foodDTO.getRestaurantDTO().getName());
 
         if (restaurant == null) {
+            logger.error("The restaurant with name {} was not found", foodDTO.getRestaurantDTO().getName());
             throw new NoSuchRestaurantException("The restaurant with the name" + foodDTO.getRestaurantDTO().getName() + " does not exist!");
         }
 
         if (this.findByNameAndRestaurant(foodDTO.getName(), restaurant) != null) {
+            logger.error("Duplicate food with name {}", foodDTO.getName());
             throw new DuplicateFoodNameException("A food with the name " + foodDTO.getName() + " already exists for this restaurant!");
         }
 
@@ -101,9 +113,9 @@ public class FoodServiceImpl implements FoodService {
                 .category(foodDTO.getCategory())
                 .restaurant(restaurant)
                 .build();
-        System.out.println(food);
+
         Food savedFood = foodRepository.save(food);
-        System.out.println(savedFood);
+        logger.info("Saved food {}", savedFood);
 
         return FoodMapper.getInstance().convertToDTO(savedFood);
     }

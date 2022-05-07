@@ -4,6 +4,8 @@ import com.example.secondassignment.model.Address;
 import com.example.secondassignment.repository.AddressRepository;
 import com.example.secondassignment.service.exceptions.InvalidDataException;
 import com.example.secondassignment.service.validators.AddressValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,8 @@ import java.util.Optional;
  */
 @Service
 public class AddressServiceImpl implements AddressService {
+
+    private final static Logger logger = LoggerFactory.getLogger(AddressServiceImpl.class.getName());
 
     /**
      * Repository of the address, used for accessing the Address table in the database.
@@ -28,9 +32,11 @@ public class AddressServiceImpl implements AddressService {
      */
     public String validateAddress(Address address) {
         try {
+            logger.info("Validate details of address: street {}, number {}", address.getStreet(), address.getNumber());
             new AddressValidator().validate(address);
             return null;
         } catch (InvalidDataException e) {
+            logger.error(e.getMessage());
             return e.getMessage();
         }
     }
@@ -40,6 +46,7 @@ public class AddressServiceImpl implements AddressService {
      */
     @Override
     public Address save(Address address) throws InvalidDataException {
+        logger.info("Save address to database");
         String validationMsg = validateAddress(address);
         if (validationMsg != null) {
             throw new InvalidDataException(validationMsg);

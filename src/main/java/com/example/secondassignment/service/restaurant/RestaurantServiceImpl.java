@@ -15,8 +15,8 @@ import com.example.secondassignment.service.exceptions.InvalidDataException;
 import com.example.secondassignment.service.restaurant.exceptions.DuplicateRestaurantNameException;
 import com.example.secondassignment.service.validators.NameValidator;
 import com.example.secondassignment.service.address.zone.ZoneServiceImpl;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.*;
@@ -46,7 +46,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Autowired
     private ZoneServiceImpl zoneService;
 
-    private final static Logger logger = LogManager.getLogger(RestaurantServiceImpl.class.getName());
+    private final static Logger logger = LoggerFactory.getLogger(RestaurantServiceImpl.class.getName());
 
     /**
      * Validates the name of a restaurant, before its creation.
@@ -55,9 +55,11 @@ public class RestaurantServiceImpl implements RestaurantService {
      */
     public String validateRestaurant(String name) {
         try {
+            logger.info("Validate details of restaurant {}", name);
             new NameValidator().validate(name);
             return null;
         } catch (InvalidDataException e) {
+            logger.error(e.getMessage());
             return e.getMessage();
         }
     }
@@ -67,6 +69,7 @@ public class RestaurantServiceImpl implements RestaurantService {
      */
     @Override
     public Restaurant findByName(String name) {
+        logger.info("Get restaurant with name {}", name);
         Optional<Restaurant> restaurant = restaurantRepository.findByName(name);
         return restaurant.orElse(null);
     }
@@ -76,12 +79,15 @@ public class RestaurantServiceImpl implements RestaurantService {
      */
     @Override
     public RestaurantDTO save(RestaurantDTO restaurantDTO) throws InvalidDataException, DuplicateRestaurantNameException, NoSuchAccountException {
+        logger.info("Save restaurant {} to database", restaurantDTO);
         if (this.findByName(restaurantDTO.getName()) != null) {
+            logger.error("A restaurant with the name " + restaurantDTO.getName() + " already exists!");
             throw new DuplicateRestaurantNameException("A restaurant with the name " + restaurantDTO.getName() + " already exists!");
         }
 
         Administrator administrator = administratorService.findByEmail(restaurantDTO.getAdministratorDTO().getEmail());
         if (administrator == null) {
+            logger.error("No corresponding administrator for the restaurant {} was found!", restaurantDTO.getName());
             throw new NoSuchAccountException("No corresponding administrator was found!");
         }
 
@@ -106,9 +112,6 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .administrator(administrator)
                 .deliveryZones(zones)
                 .build();
-        logger.info("Added restaurant {}", restaurant);
-        System.out.println(restaurant);
-
         return RestaurantMapper.getInstance().convertToDTO(restaurantRepository.save(restaurant));
     }
 
@@ -117,6 +120,7 @@ public class RestaurantServiceImpl implements RestaurantService {
      */
     @Override
     public List<RestaurantDTO> findAll() {
+        logger.info("Retrieve all restaurants from the database");
         return restaurantRepository.findAll().stream()
                 .map(RestaurantMapper.getInstance()::convertToDTO)
                 .collect(Collectors.toList());
@@ -141,6 +145,7 @@ public class RestaurantServiceImpl implements RestaurantService {
      */
     @Override
     public ResponseEntity<InputStreamResource> exportMenuToPDF(String restaurantName) throws FileNotFoundException {
+        logger.info("Export restaurant {}'s menu to PDF", restaurantName);
         Restaurant restaurant = this.findByName(restaurantName);
         PDFGenerator generator = new PDFGenerator();
         generator.setRestaurant(restaurant);

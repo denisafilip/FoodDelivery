@@ -4,12 +4,12 @@
         <Console name="ConsoleAppender" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} - %msg%n" />
         </Console>
-        <File name="FileAppender" fileName="LogOfEvent.txt" immediateFlush="false" append="true">
-            <PatternLayout pattern="%msg%n"/> <!--%d{yyy-MM-dd HH:mm:ss} [%t] %-5level-->
-        </File>
+        <RollingFile name="FileAppender" fileName="logs/food_delivery.log" append="true">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/> <!--%d{yyy-MM-dd HH:mm:ss} [%t] %-5level-->
+        </RollingFile>
     </Appenders>
     <Loggers>
-        <Root level="debug">
+        <Root level="info">
             <AppenderRef ref="ConsoleAppender" />
             <AppenderRef ref="FileAppender"/>
         </Root>
