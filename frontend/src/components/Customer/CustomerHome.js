@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { Container, Nav, Navbar, Button } from 'react-bootstrap';
+import { useNavigate } from "react-router-dom";
 import {Outlet} from 'react-router-dom';
 import AuthService from '../AuthService';
 import axios from "axios";
@@ -24,9 +25,14 @@ export default function CustomerHome() {
                 localStorage.setItem('user', JSON.stringify(response.data));
                 console.log(response.data);
             })
-            .catch((error) => console.error("There was an error when getting the current user!", error));
-    }, []);
-
+            .catch((error) => {
+                console.error("There was an error when getting the current user!", error)
+                navigate("/");
+            } );
+        }, []);
+    
+    const navigate = useNavigate();
+    
     function logOut() {
         AuthService.logout();
     }

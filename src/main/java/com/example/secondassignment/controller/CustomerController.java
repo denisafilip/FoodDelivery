@@ -36,13 +36,14 @@ public class CustomerController {
     private ViewOrdersFacade viewOrdersFacade;
 
     @PostMapping("/register")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<CustomerDTO> registerCustomer(@RequestBody(required = false) CustomerDTO customerDTO)
             throws InvalidDataException, DuplicateEmailException {
         return new ResponseEntity<>(customerService.register(customerDTO), HttpStatus.CREATED);
     }
 
     @GetMapping("/get")
-    @PreAuthorize("hasAuthority('CUSTOMER')")
+    @PreAuthorize("hasRole('CUSTOMER')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public CustomerDTO getCurrentCustomer(@Param("customerEmail") String customerEmail) {
         System.out.println(customerEmail);
@@ -60,7 +61,7 @@ public class CustomerController {
     }
 
     @GetMapping("/viewOrderHistory")
-    @PreAuthorize("hasAuthority('CUSTOMER')")
+    @PreAuthorize("hasRole('CUSTOMER')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<List<OrderDTO>> getOrders(@Param("customerEmail") String customerEmail)
             throws NoSuchRestaurantException, InvalidDataException {
@@ -68,7 +69,7 @@ public class CustomerController {
     }
 
     @PostMapping("/viewMenu")
-    @PreAuthorize("hasAuthority('CUSTOMER')")
+    @PreAuthorize("hasRole('CUSTOMER')")
     public ResponseEntity<OrderDTO> placeOrder(@RequestBody(required = false) OrderDTO orderDTO) throws InvalidDataException {
         return new ResponseEntity<>(orderService.save(orderDTO), HttpStatus.ACCEPTED);
     }

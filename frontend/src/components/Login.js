@@ -25,42 +25,18 @@ function Login() {
         await AuthService.login(credentials).then(
             (user) => {
                 console.log(user)
-                if (user.role == "ADMIN") {
+                if (user.role == "ROLE_ADMIN") {
                     navigate("/admin")
-                } else if (user.role == "CUSTOMER") {
+                } else if (user.role == "ROLE_CUSTOMER") {
                     navigate("/customer")
                 }
             }
         )
         .catch((error) => {
-            //alert(error.message);
             setError(error.response.data.message);
             localStorage.removeItem("jwt");
             console.error("There was an error!", error.response.data.message)
         });
-            /*await axios
-          .post("http://localhost:8080/login", credentials)
-          .then((response) => {
-              if (response.date.accessToken) {
-                console.info(response.data);
-                localStorage.setItem('user', JSON.stringify(response.data));
-              }
-              
-
-            if (response.data.hasOwnProperty('restaurant') && response.data.restaurant == null) {
-                navigate("/admin/addRestaurant");
-            } else if (response.data.hasOwnProperty('restaurant') && response.data.restaurant != null) {
-                navigate('/admin')
-            } else {
-                navigate("/customer");
-            }
-          })
-          .catch((error) => {
-              //alert(error.message);
-              setError(error.response.data.message);
-              localStorage.removeItem("user");
-              console.error("There was an error!", error.response.data.message)
-          });*/
     }    
 
     const doLogin = async() => {

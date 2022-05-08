@@ -30,6 +30,6 @@ public class CustomerDetailsServiceImpl implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 customer.getEmail(),
                 customer.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority(AccountRole.CUSTOMER.toString())));
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_CUSTOMER")));
     }
 }

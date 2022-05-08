@@ -30,6 +30,6 @@ public class AdministratorDetailsServiceImpl implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 administrator.getEmail(),
                 administrator.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority(AccountRole.ADMIN.toString())));
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN")));
     }
 }

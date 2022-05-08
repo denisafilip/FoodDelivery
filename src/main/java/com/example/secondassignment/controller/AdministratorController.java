@@ -60,7 +60,7 @@ public class AdministratorController {
     }
 
     @GetMapping("/get")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public AdministratorDTO getCurrentAdministrator(@Param("adminEmail") String adminEmail) {
         logger.info("Obtain logged in administrator data.");
@@ -68,7 +68,7 @@ public class AdministratorController {
     }
 
     @PostMapping("/save")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AdministratorDTO> save(@Validated @RequestBody Administrator administrator) {
         logger.info("Save administrator to database");
         return new ResponseEntity<>(AdministratorMapper.getInstance().convertToDTO(administratorService.save(administrator)),
@@ -76,7 +76,7 @@ public class AdministratorController {
     }
 
     @PostMapping("/addRestaurant")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RestaurantDTO> addRestaurant(@RequestBody(required = false) RestaurantDTO restaurantDTO) throws
             InvalidDataException, DuplicateRestaurantNameException, NoSuchAccountException {
         logger.info("Add restaurant {} for administrator {}", restaurantDTO.getName(), restaurantDTO.getAdministratorDTO().getEmail());
@@ -84,7 +84,7 @@ public class AdministratorController {
     }
 
     @PostMapping("/addFood")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<FoodDTO> addFood(@RequestBody(required = false) FoodDTO foodDTO) throws InvalidDataException,
             DuplicateFoodNameException, NoSuchRestaurantException {
         logger.info("Add food {} for restaurant {}", foodDTO.getName(), foodDTO.getRestaurantDTO().getName());
@@ -108,7 +108,7 @@ public class AdministratorController {
      * @throws InvalidDataException If the name of the restaurant is invalid
      */
     @GetMapping("/viewOrders")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<List<OrderDTO>> getOrders(@Param("restaurantName") String restaurantName)
             throws NoSuchRestaurantException, InvalidDataException {
@@ -122,7 +122,7 @@ public class AdministratorController {
      * @throws InvalidDataException if the status change is invalid
      */
     @PostMapping("/order/accept")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderDTO> acceptOrder(@RequestBody(required = false) OrderDTO orderDTO) throws InvalidDataException {
         logger.info("Accept the order {}", orderDTO);
         return new ResponseEntity<>(orderService.acceptOrder(orderDTO), HttpStatus.CREATED);
@@ -135,7 +135,7 @@ public class AdministratorController {
      * @throws InvalidDataException if the status change is invalid
      */
     @PostMapping("/order/decline")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderDTO> declineOrder(@RequestBody(required = false) OrderDTO orderDTO) throws InvalidDataException {
         logger.info("Decline the order {}", orderDTO);
         return new ResponseEntity<>(orderService.declineOrder(orderDTO), HttpStatus.CREATED);
@@ -148,7 +148,7 @@ public class AdministratorController {
      * @throws InvalidDataException if the status change is invalid
      */
     @PostMapping("/order/startDelivery")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderDTO> startDelivery(@RequestBody(required = false) OrderDTO orderDTO) throws InvalidDataException {
         logger.info("Start delivery for the order {}", orderDTO);
         return new ResponseEntity<>(orderService.startDelivery(orderDTO), HttpStatus.CREATED);
@@ -161,7 +161,7 @@ public class AdministratorController {
      * @throws InvalidDataException if the status change is invalid
      */
     @PostMapping("/order/endDelivery")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderDTO> endDelivery(@RequestBody(required = false) OrderDTO orderDTO) throws InvalidDataException {
         logger.info("End delivery for the order {}", orderDTO);
         return new ResponseEntity<>(orderService.endDelivery(orderDTO), HttpStatus.CREATED);
@@ -174,7 +174,7 @@ public class AdministratorController {
      * @throws IOException if the PDF file is not found
      */
     @RequestMapping("viewMenu/export")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<InputStreamResource> generatePDF(@Param("restaurantName") String restaurantName) throws IOException {
         logger.info("Export to PDF document the menu of the restaurant {}", restaurantName);
         return restaurantService.exportMenuToPDF(restaurantName);

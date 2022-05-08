@@ -16,6 +16,7 @@ function ViewAllMenus() {
         restaurant: currentRestaurant,
         foods: []
     })
+    const [auth, setAuth] = useState(false);
 
     const [modalShow, setModalShow] = useState(false);
     const [error, setError] = useState("");

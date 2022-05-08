@@ -57,12 +57,11 @@ public class SecurityConfiguration {
                     .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                     .authorizeRequests()
-                    .antMatchers("/").permitAll()
                     .antMatchers("/getZones").permitAll()
                     .antMatchers("/getFoodCategories").permitAll()
                     .antMatchers("/login").permitAll()
-                    .antMatchers("/getRestaurants").permitAll()
-                    .antMatchers("/customer/register").permitAll()
+                    .antMatchers("/admin/viewMenu").permitAll()
+                    .antMatchers("/").permitAll()
                     .anyRequest().authenticated();
             http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         }
@@ -84,12 +83,11 @@ public class SecurityConfiguration {
                     .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                     .authorizeRequests()
-                    .antMatchers("/").permitAll()
                     .antMatchers("/getZones").permitAll()
                     .antMatchers("/getFoodCategories").permitAll()
                     .antMatchers("/login").permitAll()
                     .antMatchers("/getRestaurants").permitAll()
-                    .antMatchers("/customer/register").permitAll()
+                    .antMatchers("/").permitAll()
                     .anyRequest().authenticated();
             http.addFilterBefore(new AuthTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         }

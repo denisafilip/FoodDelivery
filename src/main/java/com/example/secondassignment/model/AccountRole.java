@@ -1,6 +1,6 @@
 package com.example.secondassignment.model;
 
 public enum AccountRole {
-    ADMIN,
-    CUSTOMER
+    ROLE_ADMIN,
+    ROLE_CUSTOMER
 }

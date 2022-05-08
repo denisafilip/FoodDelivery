@@ -39,12 +39,12 @@ public class AccountController {
         String role = null;
         boolean hasRestaurant = false;
         if (accountDTO instanceof AdministratorDTO) {
-            role = AccountRole.ADMIN.toString();
+            role = AccountRole.ROLE_ADMIN.toString();
             if (((AdministratorDTO) accountDTO).getRestaurant() != null) {
                 hasRestaurant = true;
             }
         } else if (accountDTO instanceof CustomerDTO) {
-             role = AccountRole.CUSTOMER.toString();
+             role = AccountRole.ROLE_CUSTOMER.toString();
         }
 
         logger.info("Generated JWT token {}", jwt);
